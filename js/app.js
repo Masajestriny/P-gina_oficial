@@ -26,6 +26,8 @@
     renderServices();
     renderProducts();
     renderPromos();
+    renderPackages();
+    renderCoverage();
     renderGallery();
     renderTestimonials();
     renderBlog();
@@ -88,7 +90,7 @@
         navMenu.classList.remove('open');
         hamburger?.classList.remove('open');
         hamburger?.setAttribute('aria-expanded', 'false');
-        document.body.classList.remove('no-scroll');
+        document.body.classList.toggle('no-scroll', !!document.querySelector('.drawer-backdrop:not([hidden]), .modal-overlay:not([hidden])'));
       });
     });
   }
@@ -177,8 +179,7 @@
         <article class="service-card reveal" role="listitem" data-category="${s.category}">
           <div class="service-img-wrap">
             <img src="${s.img}" alt="${s.name} en Triny Masajes" loading="lazy"
-                 onerror="this.src='img/491791637_3930027970579804_1729663323855883877_n.jpg'" />
-            <div class="service-badge">${s.icon}</div>
+                 onerror="this.hidden=true" />
             <div class="service-actions-top">
               <button class="sa-btn${isFav?' favorited':''}" onclick="toggleFavorite(${s.id},this)"
                 aria-label="${isFav?'Quitar de':'Agregar a'} favoritos">
@@ -194,14 +195,22 @@
             <p class="service-desc">${s.desc}</p>
             <div class="service-meta">
               <span class="service-duration"><i data-lucide="clock"></i>${s.duration}</span>
-              <span class="service-price">${s.price}</span>
+              <span class="service-price">${s.priceLabel}</span>
             </div>
           </div>
           <div class="service-card-actions">
             <button class="btn btn-outline" onclick="openServiceModal(${s.id})">Más info</button>
-            <a href="${window.WA?.bookService(s.name)||'#'}" target="_blank" rel="noopener" class="btn btn-primary">
-              <i data-lucide="calendar-plus"></i> Reservar
-            </a>
+            <div class="quantity-picker" role="group" aria-label="Cantidad de sesiones para ${s.name}">
+              <span>Sesiones</span>
+              <div class="quantity-controls">
+                <button type="button" aria-label="Quitar una sesión de ${s.name}" onclick="adjustQuantity('serviceQuantity-${s.id}',-1)">−</button>
+                <input type="number" min="1" max="99" value="1" id="serviceQuantity-${s.id}" aria-label="Cantidad de sesiones de ${s.name}" />
+                <button type="button" aria-label="Agregar una sesión de ${s.name}" onclick="adjustQuantity('serviceQuantity-${s.id}',1)">+</button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="TrinyCart.add('service',${s.id},document.getElementById('serviceQuantity-${s.id}').value)">
+              <i data-lucide="shopping-cart" aria-hidden="true"></i> Al carrito
+            </button>
           </div>
         </article>
       `;
@@ -257,14 +266,12 @@
     if (!modal || !content) return;
 
     content.innerHTML = `
-      <img src="${s.img}" alt="${s.name}" class="service-modal-img"
-           onerror="this.src='img/491791637_3930027970579804_1729663323855883877_n.jpg'" loading="lazy" />
+      <img src="${s.img}" alt="${s.name}" class="service-modal-img" onerror="this.hidden=true" loading="lazy" />
       <div class="service-modal-body">
         <h2 class="service-modal-title" id="modalServiceTitle">${s.name}</h2>
         <div class="service-modal-meta">
           <span class="smeta-item"><i data-lucide="clock"></i>${s.duration}</span>
-          <span class="smeta-item"><i data-lucide="tag"></i>${s.category}</span>
-          <span class="smeta-price">${s.price}</span>
+          <span class="smeta-price">${s.priceLabel}</span>
         </div>
         <p class="service-modal-desc">${s.desc}</p>
         <div class="service-modal-benefits">
@@ -272,11 +279,8 @@
           <ul>${s.benefits.map(b => `<li>${b}</li>`).join('')}</ul>
         </div>
         <div class="service-modal-actions">
-          <a href="${window.WA?.bookService(s.name)||'#'}" target="_blank" rel="noopener" class="btn btn-hero-wa">
-            Reservar por WhatsApp
-          </a>
-          <button class="btn btn-primary" onclick="document.getElementById('reservas').scrollIntoView({behavior:'smooth'});closeModal('serviceModal')">
-            <i data-lucide="calendar-plus"></i> Reservar Online
+          <button class="btn btn-primary" onclick="TrinyCart.add('service',${s.id},1);closeModal('serviceModal');startBookingFromCart()">
+            <i data-lucide="shopping-cart" aria-hidden="true"></i> Agregar al carrito y continuar
           </button>
         </div>
       </div>
@@ -286,6 +290,60 @@
     document.body.classList.add('no-scroll');
     if (window.lucide) lucide.createIcons();
   };
+
+  function renderPackages() {
+    const grid = document.getElementById('packagesGrid');
+    if (!grid) return;
+    grid.innerHTML = PACKAGES_DATA.map(pack => `
+      <article class="package-card">
+        <h3>${pack.name}</h3>
+        <p class="package-price">S/ ${pack.priceNum} <span>por ${pack.sessions} sesiones</span></p>
+        <ul>${pack.details.map(detail => `<li>${detail}</li>`).join('')}</ul>
+        ${pack.singleSessionPrice ? `<p>Sesión individual: S/ ${pack.singleSessionPrice}</p>` : ''}
+        ${pack.terms ? `<p class="package-note">${pack.terms}</p><p>Domingos y feriados: S/ ${pack.holidayPrice} (condición por confirmar).</p>` : ''}
+        <div class="quantity-picker" role="group" aria-label="Cantidad de paquetes de ${pack.name}">
+          <span>Paquetes (cada uno incluye ${pack.sessions} sesiones)</span>
+          <div class="quantity-controls">
+            <button type="button" aria-label="Quitar un paquete de ${pack.name}" onclick="adjustQuantity('packageQuantity-${pack.id}',-1)">−</button>
+            <input type="number" min="1" max="99" value="1" id="packageQuantity-${pack.id}" aria-label="Cantidad de paquetes de ${pack.name}" />
+            <button type="button" aria-label="Agregar un paquete de ${pack.name}" onclick="adjustQuantity('packageQuantity-${pack.id}',1)">+</button>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="TrinyCart.add('package','${pack.id}',document.getElementById('packageQuantity-${pack.id}').value)">
+          <i data-lucide="shopping-cart" aria-hidden="true"></i> Al carrito
+        </button>
+      </article>
+    `).join('');
+    if (window.lucide) lucide.createIcons();
+  }
+
+  window.adjustQuantity = function(id, delta) {
+    const input = document.getElementById(id);
+    if (!input) return;
+    const current = Number(input.value);
+    const value = Number.isFinite(current) ? current : 1;
+    input.value = String(Math.max(1, Math.min(99, value + delta)));
+  };
+
+  function renderCoverage() {
+    const root = document.getElementById('coverageGroups');
+    const coverage = window.TRINY_CONFIG?.coverage;
+    if (!root || !coverage) return;
+    const lima = coverage.lima.map(place => place.label);
+    const asia = coverage.playas['Asia y condominios'] || [];
+    const pending = coverage.playas['Ubicación pendiente de validar'] || [];
+    const south = Object.entries(coverage.playas)
+      .filter(([group]) => group !== 'Asia y condominios' && group !== 'Ubicación pendiente de validar')
+      .map(([group, places]) => `<div class="coverage-subgroup"><h4>${group}</h4><ul>${places.map(place => `<li>${place}</li>`).join('')}</ul></div>`)
+      .join('');
+    root.innerHTML = `
+      <article class="coverage-group"><span class="coverage-index">01</span><h3>Lima</h3><p>Distritos incluidos en la información de cobertura.</p><ul>${lima.map(place => `<li>${place}</li>`).join('')}</ul></article>
+      <article class="coverage-group"><span class="coverage-index">02</span><h3>Playas del Sur Chico</h3><p>Consulta disponibilidad específica de tu playa o localidad.</p>${south}</article>
+      <article class="coverage-group"><span class="coverage-index">03</span><h3>Asia y condominios</h3><p>Confirma acceso, ubicación y disponibilidad con el equipo.</p><ul>${asia.map(place => `<li>${place}</li>`).join('')}</ul></article>
+      ${pending.length ? `<p class="coverage-pending"><strong>Ubicación pendiente de validar:</strong> ${pending.join(', ')}. Consulta con la central antes de solicitar el servicio.</p>` : ''}
+      <p class="coverage-note">La lista muestra las zonas configuradas, no garantiza disponibilidad. La reserva se coordina y confirma con el equipo.</p>
+    `;
+  }
 
   // ────────────────────────────────────────────
   //  PRODUCTS
@@ -311,7 +369,7 @@
         <article class="product-card" role="listitem">
           <div class="product-img-wrap">
             <img src="${p.img}" alt="${p.name}" loading="lazy"
-                 onerror="this.src='img/491791637_3930027970579804_1729663323855883877_n.jpg'" />
+                 onerror="this.src='img/Masaje relajante.png'" />
             ${p.tag ? `<span class="product-tag">${p.tag}</span>` : ''}
           </div>
           <div class="product-body">
@@ -422,12 +480,13 @@
     const data = GALLERY_DATA.filter(g => galleryFilter === 'all' || g.category === galleryFilter);
 
     grid.innerHTML = data.map(g => `
-      <figure class="gallery-item${g.tall ? ' tall' : ''}" 
-              role="listitem" 
+      <figure class="gallery-item${g.tall ? ' tall' : ''}"
+              role="button"
               onclick="openLightbox('${g.src}','${g.alt}')"
               tabindex="0"
+              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openLightbox('${g.src}','${g.alt}')}"
               aria-label="Ver imagen: ${g.alt}">
-        <img src="${g.src}" alt="${g.alt}" loading="lazy" />
+        <img src="${g.src}" alt="${g.alt}" loading="lazy" onerror="this.closest('figure').hidden=true" />
         <div class="gallery-overlay" aria-hidden="true">
           <svg class="gallery-overlay-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/>
@@ -439,6 +498,8 @@
     // Before & After
     const baGrid = document.getElementById('beforeAfterGrid');
     if (baGrid) {
+      const section = baGrid.closest('.before-after-section');
+      if (section) section.hidden = BEFORE_AFTER_DATA.length === 0;
       baGrid.innerHTML = BEFORE_AFTER_DATA.map(ba => `
         <div class="ba-card">
           <div class="ba-images">
@@ -510,7 +571,7 @@
       <article class="blog-card" role="listitem">
         <div class="blog-img-wrap">
           <img src="${b.img}" alt="${b.title}" loading="lazy"
-               onerror="this.src='img/494072324_3943036845945583_4337052228856049629_n.jpg'" />
+               onerror="this.src='img/Masaje relajante.png'" />
         </div>
         <div class="blog-body">
           <span class="blog-cat">${b.category}</span>

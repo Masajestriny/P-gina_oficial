@@ -1,72 +1,45 @@
-// ============================================================
-//  TRINY MASAJES — Customer Support & n8n Webhook 2 Integration
-//  Webhook 2 (Atención al Cliente): https://inversionespreaft.app.n8n.cloud/webhook/c06ec5b8-0746-40e8-ae75-22d5521324fe
-// ============================================================
-
 (function() {
-  const N8N_SUPPORT_WEBHOOK_URL = 'https://inversionespreaft.app.n8n.cloud/webhook/c06ec5b8-0746-40e8-ae75-22d5521324fe';
+  'use strict';
 
-  window.submitSupportForm = async function(e) {
-    e.preventDefault();
-    const btn = document.getElementById('btnSupportSubmit');
-    const name    = document.getElementById('supName')?.value?.trim() || document.getElementById('modalSupName')?.value?.trim();
-    const phone   = document.getElementById('supPhone')?.value?.trim() || document.getElementById('modalSupPhone')?.value?.trim();
-    const email   = document.getElementById('supEmail')?.value?.trim() || document.getElementById('modalSupEmail')?.value?.trim();
-    const subject = document.getElementById('supSubject')?.value || document.getElementById('modalSupSubject')?.value || 'Consulta General';
-    const message = document.getElementById('supMessage')?.value?.trim() || document.getElementById('modalSupMsg')?.value?.trim();
+  window.submitSupportForm = function(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const read = selector => form.querySelector(selector)?.value?.trim() || '';
+    const isInline = form.id === 'supportFormInline';
+    const name = read(isInline ? '#supName' : '#modalSupName');
+    const phone = read(isInline ? '#supPhone' : '#modalSupPhone');
+    const email = read(isInline ? '#supEmail' : '#modalSupEmail');
+    const subject = read('#supSubject') || 'Consulta general';
+    const message = read(isInline ? '#supMessage' : '#modalSupMsg');
+    const phoneDigits = phone.replace(/\D/g, '');
 
-    if (!name || !phone || !message) {
-      showToast('Campos Incompletos', 'Por favor ingresa tu nombre, celular y mensaje.', 'warning');
+    if (!name || !message || phoneDigits.length < 9 || phoneDigits.length > 15) {
+      window.showToast?.('Revisa tus datos', 'Ingresa nombre, mensaje y un teléfono válido.', 'warning');
       return;
     }
 
-    if (btn) {
-      btn.disabled = true;
-      btn.innerHTML = 'Enviando a n8n...';
+    const text = [
+      'Consulta para Masajes Triny Delivery',
+      `Nombre: ${name}`,
+      `WhatsApp de contacto: ${phone}`,
+      email ? `Correo: ${email}` : '',
+      `Tema: ${subject}`,
+      `Mensaje: ${message}`
+    ].filter(Boolean).join('\n');
+    const href = window.WA?.link(text, 'central1');
+    if (!href) {
+      window.showToast?.('No se pudo abrir WhatsApp', 'Inténtalo nuevamente o utiliza los enlaces de las centrales.', 'error');
+      return;
     }
 
-    const payload = {
-      event: 'customer_support_request',
-      type: 'atencion_al_cliente',
-      source: 'web_triny_masajes',
-      timestamp: new Date().toISOString(),
-      customer: {
-        name,
-        phone,
-        email,
-      },
-      support_ticket: {
-        subject,
-        message,
-        status: 'open',
-        contact_number: '986820428'
-      }
-    };
-
-    try {
-      const response = await fetch(N8N_SUPPORT_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      console.log('[Support Webhook 2 status]:', response.status);
-      showToast('¡Mensaje enviado a n8n!', `Hola ${name}, tu mensaje de Atención al Cliente fue recibido. Te responderemos al ${phone}.`, 'success', 5000);
-      
-      document.getElementById('supportFormInline')?.reset();
-      document.getElementById('supportForm')?.reset();
-      window.closeModal?.('supportModal');
-    } catch (err) {
-      console.error('[Support Webhook 2 Error]:', err);
-      showToast('Solicitud Registrada', 'Gracias por comunicarte. Un asesor de Triny Masajes revisará tu mensaje.', 'success', 5000);
-    } finally {
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="send"></i> Enviar Mensaje a Soporte (n8n)';
-        if (window.lucide) lucide.createIcons();
-      }
-    }
+    const link = document.createElement('a');
+    link.href = href;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.hidden = true;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.showToast?.('Continúa en WhatsApp', 'Revisa el mensaje y envíalo desde WhatsApp. La página no ha registrado tu consulta.', 'info', 6000);
   };
-
-  console.log('[Triny Masajes] Support module verified with Webhook 2 ✓');
 })();

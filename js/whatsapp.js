@@ -1,32 +1,57 @@
-// ============================================================
-//  TRINY MASAJES — WhatsApp Module
-//  Official WhatsApp Number: 986820428 (+51 986 820 428)
-// ============================================================
-
 (function() {
-  const WA_NUMBER = '51986820428';
+  'use strict';
 
-  function buildWALink(message) {
-    return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+  function getCentral(centralId) {
+    const key = centralId === 'central2' ? 'central2' : 'central1';
+    const central = window.TRINY_CONFIG?.contacts?.[key];
+    if (!central) throw new Error(`No existe la configuración para ${key}.`);
+    return central;
+  }
+
+  function buildWALink(message, centralId) {
+    const central = getCentral(centralId);
+    return `https://wa.me/${central.phone}?text=${encodeURIComponent(message)}`;
   }
 
   window.WA = {
-    number: WA_NUMBER,
-    displayNumber: '+51 986 820 428',
     link: buildWALink,
-    bookService: (serviceName) => buildWALink(
-      `¡Hola Triny Masajes! 🌿 Me gustaría reservar una cita para *${serviceName}*. ¿Cuál es la disponibilidad?`
-    ),
-    generalInfo: () => buildWALink(
-      '¡Hola Triny Masajes! 🌿 Me interesa conocer más sobre los servicios y promociones de masajes.'
-    ),
-    claimPrize: (prize) => buildWALink(
-      `¡Hola! 🎉 Acabo de ganar *${prize}* en la ruleta de Triny Masajes. ¿Cómo puedo reclamarlo?`
-    ),
-    supportChat: () => buildWALink(
-      '¡Hola Atención al Cliente! 🎧 Tengo una consulta sobre un servicio / reserva.'
-    )
+    bookService(serviceName, centralId) {
+      return buildWALink(`Hola, quisiera solicitar una reserva para ${serviceName}. ¿Pueden revisar disponibilidad?`, centralId);
+    },
+    generalInfo(centralId) {
+      return buildWALink('Hola, quisiera información sobre los servicios de Masajes Triny Delivery.', centralId);
+    },
+    claimPrize(prize, centralId) {
+      return buildWALink(`Hola, quisiera consultar sobre el premio: ${prize}.`, centralId);
+    },
+    supportChat(centralId) {
+      return buildWALink('Hola, tengo una consulta para Atención al Cliente.', centralId);
+    }
   };
+
+  function configureContactLinks() {
+    document.querySelectorAll('[data-whatsapp-central]').forEach(link => {
+      const centralId = link.dataset.whatsappCentral;
+      const central = getCentral(centralId);
+      link.href = buildWALink(link.dataset.whatsappMessage || 'Hola, quisiera contactar a Triny.', centralId);
+      link.setAttribute('aria-label', `Abrir WhatsApp ${central.label} ${central.display}`);
+      link.querySelectorAll(`[data-central-display="${centralId}"]`).forEach(element => {
+        element.textContent = central.display;
+      });
+    });
+
+    const socialMarkup = window.TRINY_CONFIG.social.map(item => `
+      <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="sn-link">
+        <span class="sn-name">${item.label}</span>
+      </a>
+    `).join('');
+    const footerSocials = document.getElementById('footerSocialLinks');
+    if (footerSocials) footerSocials.innerHTML = socialMarkup;
+    const headerSocials = document.getElementById('headerSocialLinks');
+    if (headerSocials) headerSocials.innerHTML = socialMarkup;
+  }
+
+  document.addEventListener('DOMContentLoaded', configureContactLinks);
 
   let lastScroll = 0;
   const floatBtn = document.getElementById('whatsappFloat');
@@ -38,6 +63,4 @@
     }
     lastScroll = current;
   }, { passive: true });
-
-  console.log('[Triny Masajes] WhatsApp module updated with 986820428 ✓');
 })();

@@ -26,16 +26,7 @@
   }
 
   function getSampleClients() {
-    return [
-      { id:1, name:'María García',     email:'maria@correo.com',    phone:'+51 987 654 321', status:'vip',      reservations:12, lastService:'Masaje Relajante',    prize:'20% Descuento',  tags:['vip','cumpleaños'], notes:'Prefiere masajes con aceite de lavanda. Cumpleaños: 15 Marzo.', birthday:'1988-03-15', joinDate:'2023-01-10', totalSpent: 840 },
-      { id:2, name:'Carlos Rodríguez', email:'carlos@correo.com',   phone:'+51 956 789 012', status:'frecuente',reservations:6,  lastService:'Masaje Deportivo',    prize:'',               tags:['deportista'],      notes:'Deportista. Viene cada 2 semanas.', birthday:'1992-07-22', joinDate:'2024-02-20', totalSpent: 570 },
-      { id:3, name:'Ana Flores',       email:'ana@correo.com',      phone:'+51 934 567 890', status:'frecuente',reservations:4,  lastService:'Spa para Parejas',    prize:'Masaje Facial',  tags:['pareja'],          notes:'Viene con su esposo. Les gusta el spa para parejas.', birthday:'1990-11-08', joinDate:'2024-05-01', totalSpent: 880 },
-      { id:4, name:'Roberto Sánchez',  email:'roberto@correo.com',  phone:'+51 912 345 678', status:'nuevo',    reservations:1,  lastService:'Drenaje Linfático',   prize:'10% Descuento',  tags:['nuevo'],           notes:'Primera visita. Le interesa el drenaje linfático.', birthday:'1985-04-30', joinDate:'2026-07-28', totalSpent: 100 },
-      { id:5, name:'Lucía Torres',     email:'lucia@correo.com',    phone:'+51 978 901 234', status:'vip',      reservations:18, lastService:'Masaje Prenatal',     prize:'Exfoliación',    tags:['vip','prenatal'],  notes:'Embarazada 6 meses. Masajes prenatales únicamente.', birthday:'1994-09-12', joinDate:'2022-08-15', totalSpent: 1620 },
-      { id:6, name:'Diego Morales',    email:'diego@correo.com',    phone:'+51 945 678 901', status:'frecuente',reservations:8,  lastService:'Masaje Descontracturante', prize:'',            tags:['oficina'],         notes:'Trabaja en oficina. Problemas de cuello y espalda.', birthday:'1987-12-03', joinDate:'2023-11-05', totalSpent: 680 },
-      { id:7, name:'Patricia Lima',    email:'patricia@correo.com', phone:'+51 923 456 789', status:'nuevo',    reservations:2,  lastService:'Masaje Anticelulítico',prize:'Cupón S/20',    tags:['nuevo','estético'],notes:'Interesada en tratamientos estéticos y reductores.', birthday:'1996-06-18', joinDate:'2026-06-15', totalSpent: 210 },
-      { id:8, name:'Fernando Vega',    email:'fernando@correo.com', phone:'+51 967 890 123', status:'frecuente',reservations:5,  lastService:'Reflexología',        prize:'',               tags:['bienestar'],       notes:'Practica meditación. Interesado en reflexología.', birthday:'1980-01-25', joinDate:'2024-09-10', totalSpent: 325 },
-    ];
+    return [];
   }
 
   // ── Add Client (from bookings or game) ──

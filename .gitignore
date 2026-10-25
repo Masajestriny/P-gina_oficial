@@ -19,5 +19,16 @@ rad.json
 #License-files
 *.bclicense
 *.flf
+
+# Local secrets and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+service-account*.json
 #Test results file
 TestResults.xml

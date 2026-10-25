@@ -12,19 +12,16 @@ window.TRINY_CONFIG = {
     }
   },
   social: [
-    { label: 'Facebook', url: 'https://www.facebook.com/masajes.triny.delivery.peru?locale=es_LA' },
-    { label: 'Instagram', url: 'https://www.instagram.com/triny_massajes/' },
-    { label: 'TikTok', url: 'https://www.tiktok.com/@trinymasajesdelivery' }
+    { label: 'Facebook', icon: 'img/icono de facebook.png', url: 'https://www.facebook.com/masajes.triny.delivery.peru?locale=es_LA' },
+    { label: 'Instagram', icon: 'img/icono de instagram.png', url: 'https://www.instagram.com/triny_massajes/' },
+    { label: 'TikTok', icon: 'img/icono de  tiktok.png', url: 'https://www.tiktok.com/@trinymasajesdelivery' }
   ],
   appsScriptUrl: 'https://script.google.com/macros/s/AKfycbwnMHC4PUn8r074K29n7YuGUJm_E2p5eg0pUY-USSDJMpRpboJhFkImgJLlnz8EQoR-Dg/exec',
-  carouselIntervalSeconds: 5,
   carouselImages: [
-    { src: 'img/Imagen para carrousel 1.png', alt: 'Masaje profesional a domicilio de Triny' },
-    { src: 'img/Imagen para carrousel 2.png', alt: 'Servicio de bienestar de Triny Masajes' },
-    { src: 'img/Imagen para carrousel 3.jpg', alt: 'Experiencia de masoterapia Triny' },
-    { src: 'img/imagen para carrousel 4.jpg', alt: 'Atención de masajes Triny' },
-    { src: 'img/Imagen para carrousel 5.png', alt: 'Masaje y bienestar a domicilio' },
-    { src: 'img/Imagen para carrousel 6.jfif', alt: 'Servicios de Triny Masajes Delivery' }
+    { src: 'img/Masaje de maderoterapia.png', alt: 'Terapeuta de Triny aplica maderoterapia con rodillos de madera' },
+    { src: 'img/Masaje Shiatsu.png', alt: 'Sesión de masaje Shiatsu de Triny' },
+    { src: 'img/Masaje drenaje linfático.png', alt: 'Terapeuta de Triny realiza un masaje de drenaje linfático' },
+    { src: 'img/Masaje relajante.png', alt: 'Sesión de masaje relajante de Triny' }
   ],
   services: [
     { id: 1, category: 'estetico', name: 'Masaje reductor manual', duration: '60 min', priceNum: 120, img: 'img/Imagen para  paquetes de masajes reductores.png', desc: 'Masaje manual orientado al cuidado corporal y al bienestar.', benefits: ['Atención personalizada', 'Sesión de una hora'] },

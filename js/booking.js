@@ -1,10 +1,8 @@
 (function() {
   'use strict';
 
-  const MAX_MESSAGE_LENGTH = 1500;
   const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   const DAYS = ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá'];
-  let submitting = false;
   let bookingState = createInitialState();
 
   function createInitialState() {
@@ -13,7 +11,7 @@
       date: '',
       time: '',
       client: {},
-      submitted: null,
+      serviceId: '',
       calendarYear: new Date().getFullYear(),
       calendarMonth: new Date().getMonth()
     };
@@ -26,7 +24,8 @@
   }
 
   function currentItems() {
-    return window.TrinyCart ? window.TrinyCart.getItems() : [];
+    const service = window.TRINY_CONFIG?.services?.find(item => String(item.id) === bookingState.serviceId);
+    return service ? [{ ...service, type: 'service', quantity: 1, sessions: 1, lineTotal: service.priceNum }] : [];
   }
 
   function renderStep() {
@@ -43,17 +42,18 @@
 
   function renderServicesStep() {
     const lines = currentItems();
+    const selectedService = lines[0];
     return `
-      <h3 class="booking-step-title">1. Servicios y paquetes elegidos</h3>
-      ${lines.length ? `
-        <ul class="booking-selected-items">
-          ${lines.map(line => `<li>${escapeHTML(line.name)} × ${line.quantity} — S/ ${line.lineTotal} estimado (${line.sessions} sesiones incluidas)</li>`).join('')}
-        </ul>
-        <p>El importe es referencial y será revisado por la central. Puedes ajustar cantidades en el <a href="#carrito">carrito</a>.</p>
-      ` : '<p>Agrega al menos un servicio o paquete antes de continuar.</p>'}
+      <h3 class="booking-step-title">1. Elige un masaje</h3>
+      <label class="form-group" for="bookingService">Tipo de masaje
+        <select id="bookingService">
+          <option value="">Selecciona un servicio</option>
+          ${window.TRINY_CONFIG.services.map(service => `<option value="${service.id}" ${String(service.id) === bookingState.serviceId ? 'selected' : ''}>${escapeHTML(service.name)}</option>`).join('')}
+        </select>
+      </label>
+      <p class="availability-note" id="bookingServiceDetails" aria-live="polite">${selectedService ? `${escapeHTML(selectedService.duration)} · S/ ${selectedService.priceNum} (importe estimado)` : 'La duración y el precio estimado se mostrarán al elegir un servicio.'}</p>
       <div class="booking-nav">
-        <a class="btn btn-secondary" href="#servicios">Ver servicios</a>
-        <button type="button" class="btn btn-primary" onclick="bookingNext()" ${lines.length ? '' : 'disabled'}>Siguiente: horario preferido</button>
+        <button type="button" class="btn btn-primary" onclick="bookingNext()" ${lines.length ? '' : 'disabled'} id="bookingServiceNext">Siguiente: horario preferido</button>
       </div>
     `;
   }
@@ -64,6 +64,7 @@
     return `
       <h3 class="booking-step-title">2. Fecha y hora preferidas</h3>
       <p>Elige una preferencia de horario. No se muestra disponibilidad en tiempo real y esta selección no confirma la cita.</p>
+      <p class="availability-note">Atención todos los días, de 9:00 a. m. a 10:00 p. m. Los horarios solicitados deben confirmarse con el equipo.</p>
       <div class="cal-nav">
         <button type="button" class="btn btn-secondary" onclick="calNav(-1)" aria-label="Mes anterior">‹</button>
         <strong>${MONTHS[month]} ${year}</strong>
@@ -154,27 +155,10 @@
 
   function renderReviewStep() {
     const lines = currentItems();
-    const total = window.TrinyCart?.getTotals();
+    const total = { amount: lines.reduce((sum, line) => sum + line.lineTotal, 0) };
     const client = bookingState.client;
-    const central = client.central === 'central2' ? 'Central 2' : 'Central 1';
-    if (bookingState.submitted) {
-      const links = ['central1', 'central2'].map(key => {
-        const contact = window.TRINY_CONFIG.contacts[key];
-        const message = buildWhatsAppMessage();
-        return `<a class="btn btn-hero-wa" href="https://wa.me/${contact.phone}?text=${encodeURIComponent(message)}" target="_blank" rel="noopener noreferrer">Continuar por WhatsApp · ${contact.label}</a>`;
-      }).join('');
-      return `
-        <div class="booking-confirm-card">
-          <h3>Solicitud recibida, pendiente de confirmación</h3>
-          <p>La respuesta del servicio indicó que el registro fue aceptado. El equipo debe revisar horario y cobertura antes de confirmar.</p>
-          <div class="booking-summary">${renderSummary(lines, total, client)}</div>
-          <div class="booking-nav">${links}</div>
-          <button type="button" class="btn btn-secondary" onclick="resetBooking()">Finalizar</button>
-        </div>
-      `;
-    }
     return `
-      <h3 class="booking-step-title">4. Revisa y envía tu solicitud</h3>
+      <h3 class="booking-step-title">4. Revisa tu solicitud</h3>
       <p class="booking-summary">${renderSummary(lines, total, client)}</p>
       <label class="form-group">Central de atención
         <select id="bkCentral">
@@ -182,11 +166,11 @@
           <option value="central2" ${client.central === 'central2' ? 'selected' : ''}>Central 2 · ${window.TRINY_CONFIG.contacts.central2.display}</option>
         </select>
       </label>
-      <p class="availability-note">El envío registra una solicitud pendiente si el servicio responde afirmativamente. No confirma disponibilidad ni genera un pago.</p>
-      <div id="bookingError" class="booking-error" role="alert" hidden></div>
+      <p class="availability-note">La reserva online estará disponible próximamente. Por ahora, la solicitud se coordina exclusivamente por WhatsApp y no se confirma al abrir el borrador.</p>
       <div class="booking-nav">
         <button type="button" class="btn btn-secondary" onclick="bookingBack()">Atrás y editar</button>
-        <button type="button" class="btn btn-primary" id="btnConfirmBooking" onclick="bookingSubmit()" ${submitting ? 'disabled' : ''}>Enviar solicitud</button>
+        <button type="button" class="btn btn-outline" disabled aria-disabled="true">Reserva online · Próximamente</button>
+        <button type="button" class="btn btn-whatsapp" id="btnConfirmBooking" onclick="sendBookingRequestToWhatsApp()">Continuar por WhatsApp</button>
       </div>
     `;
   }
@@ -212,14 +196,9 @@
     const district = document.getElementById('bkDistrict')?.value || '';
     const otherLocation = document.getElementById('bkOtherLocation')?.value?.trim() || '';
     let location = district;
-    let apiDistrict = district;
-    let registrable = false;
 
     if (zone === 'lima') {
-      const selected = window.TRINY_CONFIG.coverage.lima.find(option => option.label === district);
-      apiDistrict = selected?.apiDistrict || '';
       location = district;
-      registrable = window.TRINY_CONFIG.coverage.appsScriptDistricts.includes(apiDistrict);
     } else if (zone === 'playas') {
       location = [subzone, district].filter(Boolean).join(' — ');
     } else if (zone === 'other') {
@@ -235,8 +214,6 @@
       district,
       otherLocation,
       location,
-      apiDistrict,
-      registrable,
       address: document.getElementById('bkAddress')?.value?.trim() || '',
       reference: document.getElementById('bkReference')?.value?.trim() || '',
       notes: document.getElementById('bkNotes')?.value?.trim() || '',
@@ -305,11 +282,42 @@
       `Fecha/hora preferida: ${bookingState.date} ${bookingState.time}`,
       'Servicios:',
       itemsText,
-      `Total estimado, sujeto a confirmación: S/ ${window.TrinyCart?.getTotals().amount || 0}`,
+      `Duración: ${lines[0]?.duration || 'Por confirmar'}`,
+      `Total estimado, sujeto a confirmación: S/ ${lines.reduce((sum, line) => sum + line.lineTotal, 0)}`,
       `Observaciones: ${client.notes || 'Ninguna'}`,
-      'Solicitud pendiente de confirmación.'
+      'Este mensaje es un borrador. No se ha enviado ni confirmado la reserva.'
     ].join('\n');
   }
+
+  window.selectBookingService = function(serviceId) {
+    bookingState.serviceId = String(serviceId || '');
+    const selected = currentItems()[0];
+    const details = document.getElementById('bookingServiceDetails');
+    const next = document.getElementById('bookingServiceNext');
+    if (details) details.textContent = selected
+      ? `${selected.duration} · S/ ${selected.priceNum} (importe estimado)`
+      : 'La duración y el precio estimado se mostrarán al elegir un servicio.';
+    if (next) next.disabled = !selected;
+  };
+
+  window.sendBookingRequestToWhatsApp = function() {
+    const items = currentItems();
+    const centralId = document.getElementById('bkCentral')?.value || 'central1';
+    const central = window.TRINY_CONFIG?.contacts?.[centralId];
+    if (bookingState.step !== 4 || !items.length || !central) {
+      window.showToast?.('No se pudo preparar la solicitud', 'Revisa el servicio y los datos de reserva antes de continuar.', 'warning');
+      return;
+    }
+    const link = document.createElement('a');
+    link.href = window.WA.link(buildWhatsAppMessage(), centralId);
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.setAttribute('aria-label', `Abrir borrador de WhatsApp para ${central.label}`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.showToast?.('Borrador preparado', 'Revisa el mensaje y envíalo desde WhatsApp. La solicitud aún no está confirmada.', 'info', 6000);
+  };
 
   function updateDateButton() {
     const button = document.getElementById('bkNextDate');
@@ -318,13 +326,15 @@
     if (button) button.disabled = !bookingState.date || !bookingState.time;
   }
 
-  window.startBookingFromCart = function() {
+  window.startBooking = function() {
     bookingState = createInitialState();
-    if (currentItems().length === 0) {
-      window.showToast?.('Carrito vacío', 'Podrás continuar después de agregar servicios o paquetes desde el catálogo.', 'info');
-    }
-    const cartDrawer = document.getElementById('cartDrawer');
-    if (cartDrawer && !cartDrawer.hidden) window.TrinyDrawers?.close('cartDrawer');
+    renderStep();
+    window.TrinyDrawers?.open('bookingDrawer');
+  };
+
+  window.startBookingForService = function(serviceId) {
+    bookingState = createInitialState();
+    bookingState.serviceId = String(serviceId);
     renderStep();
     window.TrinyDrawers?.open('bookingDrawer');
   };
@@ -344,6 +354,10 @@
   };
 
   window.bookingNext = function() {
+    if (bookingState.step === 1 && !currentItems().length) {
+      window.showToast?.('Selecciona un masaje', 'Elige el servicio que deseas solicitar.', 'warning');
+      return;
+    }
     if (bookingState.step === 2) {
       updateDateButton();
       const date = new Date(`${bookingState.date}T00:00:00`);
@@ -378,133 +392,21 @@
 
   window.bookingBack = function() {
     if (bookingState.step > 1) {
-      if (bookingState.step === 4) {
-        bookingState.client.central = document.getElementById('bkCentral')?.value || bookingState.client.central;
-      }
+      if (bookingState.step === 4) bookingState.client.central = document.getElementById('bkCentral')?.value || bookingState.client.central;
       bookingState.step--;
       renderStep();
     }
   };
 
-  window.bookingSubmit = async function() {
-    if (submitting || bookingState.submitted) return;
-    const errorBox = document.getElementById('bookingError');
-    const button = document.getElementById('btnConfirmBooking');
-    const phoneDigits = String(bookingState.client.phone || '').replace(/\D/g, '');
-    const preferredDate = new Date(`${bookingState.date}T00:00:00`);
-    const currentDate = new Date();
-    const currentDateFloor = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    if (!bookingState.date || Number.isNaN(preferredDate.getTime()) || preferredDate < currentDateFloor ||
-        !/^(0[9]|1\d|2[01]):00$/.test(bookingState.time) ||
-        phoneDigits.length < 9 || phoneDigits.length > 15 ||
-        !bookingState.client.spaceConsent || !bookingState.client.contactConsent) {
-      if (errorBox) {
-        errorBox.hidden = false;
-        errorBox.textContent = 'Revisa la fecha, hora, teléfono y confirmaciones obligatorias antes de enviar.';
-      }
-      return;
-    }
-    if (!bookingState.client.registrable) {
-      if (errorBox) {
-        errorBox.hidden = false;
-        errorBox.textContent = 'La ubicación seleccionada no está entre los distritos configurados para registro en Apps Script. No se envió ni se registró la solicitud. Contacta una central para evaluar cobertura.';
-      }
-      return;
-    }
-    const district = bookingState.client.apiDistrict;
-    if (!window.TRINY_CONFIG.coverage.appsScriptDistricts.includes(district)) {
-      if (errorBox) {
-        errorBox.hidden = false;
-        errorBox.textContent = 'El servicio de registro no tiene este distrito habilitado. No se envió la solicitud.';
-      }
-      return;
-    }
-
-    const fullName = `${bookingState.client.firstName} ${bookingState.client.lastName}`.trim();
-    const items = currentItems();
-    if (!items.length) {
-      if (errorBox) {
-        errorBox.hidden = false;
-        errorBox.textContent = 'El carrito está vacío. Agrega servicios y vuelve a revisar la solicitud.';
-      }
-      return;
-    }
-    const message = [
-      `Solicitud web pendiente. Preferencia de horario: ${bookingState.time}.`,
-      `Ubicación: ${bookingState.client.location}. Dirección: ${bookingState.client.address}.`,
-      `Referencia: ${bookingState.client.reference || 'No indicada'}.`,
-      `Servicios solicitados: ${items.map(item => `${item.name} x${item.quantity} (${item.sessions} sesiones incluidas)`).join('; ')}.`,
-      `Importe referencial, no validado por servidor: S/ ${window.TrinyCart.getTotals().amount}.`,
-      `Observaciones: ${bookingState.client.notes || 'Ninguna'}.`,
-      `Aceptación del espacio para camilla: ${bookingState.client.spaceConsentAt}.`,
-      `Aceptación de contacto por WhatsApp: ${bookingState.client.contactConsentAt}.`
-    ].join(' ');
-    if (message.length > MAX_MESSAGE_LENGTH) {
-      if (errorBox) {
-        errorBox.hidden = false;
-        errorBox.textContent = 'El resumen de la solicitud excede el límite admitido. Reduce las observaciones o la cantidad de líneas del carrito.';
-      }
-      return;
-    }
-
-    const payload = {
-      district,
-      date: bookingState.date,
-      time: bookingState.time,
-      duration: 1,
-      name: fullName,
-      phone: bookingState.client.phone,
-      message
-    };
-
-    submitting = true;
-    if (button) {
-      button.disabled = true;
-      button.textContent = 'Enviando solicitud…';
-    }
-    if (errorBox) errorBox.hidden = true;
-
-    try {
-      const response = await fetch(window.TRINY_CONFIG.appsScriptUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload),
-        redirect: 'follow'
-      });
-      if (!response.ok) throw new Error(`El servidor respondió HTTP ${response.status}.`);
-      const result = await response.json();
-      if (result.ok !== true && result.success !== true) {
-        throw new Error('El servidor no confirmó que la solicitud fue registrada.');
-      }
-      bookingState.client.central = document.getElementById('bkCentral')?.value || 'central1';
-      bookingState.submitted = result;
-      renderStep();
-    } catch (error) {
-      console.error('[Booking] Falló el registro de la solicitud:', error);
-      submitting = false;
-      if (errorBox) {
-        errorBox.hidden = false;
-        errorBox.textContent = 'No se pudo verificar el registro de tu solicitud. No se mostrará como recibida. Inténtalo nuevamente o comunícate con Triny por WhatsApp.';
-      }
-      if (button) {
-        button.disabled = false;
-        button.textContent = 'Reintentar envío';
-      }
-    } finally {
-      if (bookingState.submitted) submitting = false;
-    }
-  };
-
   window.resetBooking = function() {
-    window.TrinyCart?.clear();
     bookingState = createInitialState();
-    submitting = false;
     renderStep();
     window.TrinyDrawers?.close('bookingDrawer');
   };
 
   document.addEventListener('change', event => {
     if (event.target?.id === 'bkTime') updateDateButton();
+    if (event.target?.id === 'bookingService') window.selectBookingService(event.target.value);
     if (event.target?.id === 'bkSpaceConsent' || event.target?.id === 'bkContactConsent') {
       const checked = event.target.checked;
       const key = event.target.id === 'bkSpaceConsent' ? 'spaceConsent' : 'contactConsent';

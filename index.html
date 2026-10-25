@@ -35,7 +35,7 @@
   </script>
 
   <title>Masajes Triny Delivery — Masajes a domicilio</title>
-  <link rel="stylesheet" href="css/style.css?v=1.2.7" />
+  <link rel="stylesheet" href="css/style.css?v=1.3.1" />
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -83,7 +83,18 @@
       </svg>
       <span class="wa-pulse"></span>
     </a>
-    <div class="wa-tooltip">Central de WhatsApp</div>
+    <div class="wa-tooltip">Central 1 · WhatsApp</div>
+  </div>
+  <div class="whatsapp-float whatsapp-float-secondary" id="whatsappFloatSecondary">
+    <a href="#contacto" data-whatsapp-central="central2" data-whatsapp-message="Hola, quisiera información sobre los servicios de Masajes Triny Delivery."
+       target="_blank" rel="noopener noreferrer" class="whatsapp-btn" aria-label="Contactar por WhatsApp, Central 2">
+      <svg viewBox="0 0 24 24" fill="currentColor" class="wa-icon" aria-hidden="true">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.107.547 4.094 1.508 5.83L.057 23.857c-.07.273.02.563.234.752.147.13.333.196.521.196.078 0 .156-.012.231-.036l6.225-1.874A11.914 11.914 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818c-1.9 0-3.7-.511-5.26-1.479l-.376-.225-3.895 1.173 1.115-3.785-.245-.39A9.797 9.797 0 012.182 12c0-5.418 4.4-9.818 9.818-9.818 5.419 0 9.818 4.4 9.818 9.818 0 5.419-4.399 9.818-9.818 9.818z"/>
+      </svg>
+      <span class="wa-pulse"></span>
+    </a>
+    <div class="wa-tooltip">Central 2 · WhatsApp</div>
   </div>
 
   <!-- ===================== NAVBAR ===================== -->
@@ -93,25 +104,24 @@
         <img src="img/Triny_Masajes_logo.png" alt="Triny Masajes Logo" class="nav-logo" loading="eager" />
       </a>
 
-      <ul class="nav-menu" id="navMenu" role="menubar">
-        <li role="none"><a href="#inicio" class="nav-link active" role="menuitem">Inicio</a></li>
-        <li role="none"><a href="#nosotros" class="nav-link" role="menuitem">Nosotros</a></li>
-        <li role="none"><a href="#beneficios" class="nav-link" role="menuitem">Beneficios</a></li>
-        <li role="none"><a href="#servicios" class="nav-link" role="menuitem">Servicios</a></li>
-        <li role="none"><a href="#promociones" class="nav-link" role="menuitem">Paquetes</a></li>
-        <li role="none"><a href="#cobertura" class="nav-link" role="menuitem">Cómo funciona</a></li>
-        <li role="none"><a href="#galeria" class="nav-link" role="menuitem">Galería</a></li>
-        <li role="none"><a href="#testimonios" class="nav-link" role="menuitem">Testimonios</a></li>
-        <li role="none"><a href="#videos" class="nav-link" role="menuitem">Videos</a></li>
-        <li role="none"><a href="#giftcards" class="nav-link" role="menuitem">Gift Cards</a></li>
-        <li role="none"><a href="#blog" class="nav-link" role="menuitem">Blog</a></li>
-        <li role="none"><a href="#faq" class="nav-link" role="menuitem">FAQ</a></li>
-        <li role="none"><a href="#reservas" class="nav-link" role="menuitem">Reservas</a></li>
-        <li role="none"><a href="#contacto" class="nav-link" role="menuitem">Contacto</a></li>
+      <ul class="nav-menu" id="navMenu">
+          <li><a href="#inicio" class="nav-link active">Inicio</a></li>
+          <li><a href="#nosotros" class="nav-link">Nosotros</a></li>
+          <li><a href="#beneficios" class="nav-link">Beneficios</a></li>
+          <li><a href="#servicios" class="nav-link">Servicios</a></li>
+          <li><a href="#promociones" class="nav-link">Paquetes</a></li>
+          <li><a href="#cobertura" class="nav-link">Cómo funciona</a></li>
+          <li><a href="#galeria" class="nav-link">Galería</a></li>
+          <li><a href="#testimonios" class="nav-link">Testimonios</a></li>
+          <li><a href="#videos" class="nav-link">Videos</a></li>
+          <li><a href="#giftcards" class="nav-link">Gift Cards</a></li>
+          <li><a href="#blog" class="nav-link">Blog</a></li>
+          <li><a href="#faq" class="nav-link">FAQ</a></li>
+          <li><a href="#reservas" class="nav-link">Reservas</a></li>
+          <li><a href="#contacto" class="nav-link">Contacto</a></li>
       </ul>
 
       <div class="nav-actions">
-        <div class="header-social-links" id="headerSocialLinks" aria-label="Redes sociales oficiales"></div>
         <button class="header-cart-button" type="button" onclick="TrinyDrawers.open('cartDrawer')" aria-label="Abrir carrito, 0 sesiones" aria-controls="cartDrawer">
           <i data-lucide="shopping-cart" aria-hidden="true"></i>
           <span>Carrito</span>
@@ -122,7 +132,7 @@
           <i data-lucide="headphones"></i> Soporte
         </button>
 
-        <button class="btn btn-primary-nav" onclick="startBookingFromCart()">
+        <button class="btn btn-primary-nav" onclick="startBooking()">
           <i data-lucide="calendar-plus" aria-hidden="true"></i>
           Reservar
         </button>
@@ -137,7 +147,7 @@
   <!-- ===================== HERO ===================== -->
   <section id="inicio" class="hero" aria-label="Sección de bienvenida">
     <div class="hero-bg">
-      <img src="img/Imagen para inicio de la page.png" alt="Centro de masajes Triny Masajes" class="hero-img" loading="eager" />
+      <img src="img/Imagen para inicio de la page.png" alt="Terapeuta de Triny realiza un masaje descontracturante" class="hero-img" loading="eager" />
       <div class="hero-overlay"></div>
     </div>
     <div class="hero-content">
@@ -155,177 +165,26 @@
             Elige el masaje ideal, solicita tu atención y coordina con nuestro equipo por WhatsApp.
           </p>
           <div class="hero-actions">
-            <button class="btn btn-hero-primary" onclick="startBookingFromCart()">
+            <button class="btn btn-hero-primary" onclick="startBooking()">
               <i data-lucide="calendar-heart" aria-hidden="true"></i>
-              Reservar mi masaje
+              RESERVAR AHORA
             </button>
-            <a href="#contacto" data-whatsapp-central="central1" data-whatsapp-message="Hola, quiero consultar por una reserva." target="_blank" rel="noopener noreferrer" class="btn btn-outline">WhatsApp Central 1</a>
-            <a href="#contacto" data-whatsapp-central="central2" data-whatsapp-message="Hola, quiero consultar por una reserva." target="_blank" rel="noopener noreferrer" class="btn btn-outline">WhatsApp Central 2</a>
           </div>
           <div class="hero-stats" role="list">
             <div class="stat-item" role="listitem">
-              <div class="stat-number" data-count="10">0</div>
-              <div class="stat-label">Servicios publicados</div>
+              <div class="stat-number"><i data-lucide="house" aria-hidden="true"></i></div>
+              <div class="stat-label">Atención a domicilio</div>
+            </div>
+            <div class="stat-item" role="listitem">
+              <div class="stat-number"><i data-lucide="heart-handshake" aria-hidden="true"></i></div>
+              <div class="stat-label">Atención personalizada</div>
             </div>
           </div>
         </div>
         <div class="hero-showcase">
           <div class="main-carousel" id="mainCarousel" role="region" aria-label="Galería de servicios" aria-roledescription="carrusel">
-            <button type="button" class="carousel-control" data-carousel-prev aria-label="Mostrar imagen anterior">‹</button>
-            <img id="mainCarouselImage" src="img/Imagen para carrousel 1.png" alt="Masaje profesional a domicilio de Triny" loading="eager" />
-            <button type="button" class="carousel-control" data-carousel-next aria-label="Mostrar imagen siguiente">›</button>
-            <div class="carousel-tools">
-              
-              <select id="carouselInterval" aria-label="Intervalo de cambio de imagen">
-                <option value="3">3 segundos</option>
-              
-              </select>
-            </div>
+            <img id="mainCarouselImage" src="img/Masaje de maderoterapia.png" alt="Sesión de maderoterapia con accesorios de madera" loading="eager" />
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== SOBRE NOSOTROS (AUDITORÍA COMPLETA) ===================== -->
-  <section id="nosotros" class="section nosotros-section" aria-label="Sobre Nosotros">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-tag">Nuestra Identidad</span>
-        <h2 class="section-title">Sobre <span class="text-accent">Triny Masajes</span></h2>
-        <p class="section-desc">Historia, Misión, Visión, Valores, Objetivos y Nuestro Compromiso de Calidad</p>
-      </div>
-
-      <div class="nosotros-grid">
-        <div class="nosotros-images reveal">
-          <div class="img-stack">
-            <img src="img/Imagen para inicio de la page 2.png" alt="Sesión de masaje descontracturante" class="img-main" loading="lazy" />
-            <img src="img/Triny_Masajes_logo.png" alt="Accesorios y sesión de maderoterapia" class="img-secondary" loading="lazy" />
-            <div class="img-badge-float">
-              <i data-lucide="award" aria-hidden="true"></i>
-              <span>Certificados</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="nosotros-content reveal">
-          <div class="nosotros-tabs" role="tablist" aria-label="Secciones de la Empresa">
-            <button class="tab-btn active" role="tab" aria-selected="true" id="btn-historia" onclick="switchTab(this,'tab-historia')">Historia</button>
-            <button class="tab-btn" role="tab" aria-selected="false" id="btn-mision" onclick="switchTab(this,'tab-mision')">Misión & Visión</button>
-            <button class="tab-btn" role="tab" aria-selected="false" id="btn-valores" onclick="switchTab(this,'tab-valores')">Valores</button>
-            <button class="tab-btn" role="tab" aria-selected="false" id="btn-compromiso" onclick="switchTab(this,'tab-compromiso')">Compromiso</button>
-          </div>
-
-          <div id="tab-historia" class="tab-content active" role="tabpanel">
-            <h3>¿Quienes Somos?</h3>
-            <p> Somos una empresa peruana especializada en el rubro de masajes. Contamos con una experiencia de más de 15 años
-             en el mercado, lo cual nos ha posicionado como una de las empresas con mayor demanda en el servicio de
-             masoterapia. Nuestra empresa ofrece una variedad de servicios que incluyen <strong>masajes antiestrés</strong>, <strong>masajes descontracturantes</strong>, <strong>masajes deportivos (pre y post competencia) y drenaje linfático </strong> , <strong> masajes reductores</strong> , <strong> masajes terapéuticos</strong> , <strong>reflexología y Shiatsu.</strong> Contamos con un equipo altamente capacitado y comprometido con brindar una
-             excelente atención. Nuestro éxito se basa en la calidad del servicio, atención al cliente, transparencia y adaptabilidad.Tenemos dos locales ubicados en Club el Golf los Incas y Club El Polo en Surco. Atendemos en los distritos de La
-             Molina, Surco, San Borja, San Isidro, Miraflores, Barranco, Chorrillos, Pueblo Libre, Magdalena del Mar, Surquillo, Playas de Sur Chico y áreas cercanas a Asia.Apreciamos la oportunidad de presentarnos ante ustedes y mostrar algunas imágenes que reflejan la trayectoria de
-             nuestra empresa y el esfuerzo conjunto de nuestro equipo a lo largo de estos años.</p>
-            <p>Brindamos atención de masajes a domicilio, previa coordinación con nuestro equipo por WhatsApp.</p>
-          </div>
-
-          <div id="tab-mision" class="tab-content" role="tabpanel" hidden>
-            <div class="mission-vision-grid">
-              <div class="mv-card">
-                <div class="mv-icon"><i data-lucide="target"></i></div>
-                <h4>Misión</h4>
-                <p>“Proveer experiencias de bienestar y relajación a domicilio, ofreciendo masajes personalizados y profesionales
-                    que promuevan la salud y el equilibrio físico y mental de nuestros clientes, en la comodidad de sus hogares.”</p>
-              </div>
-              <div class="mv-card">
-                <div class="mv-icon"><i data-lucide="telescope"></i></div>
-                <h4>Visión</h4>
-                <p>“Ser el servicio líder en la entrega de masajes a domicilio, reconocido por la excelencia y la innovación en el
-                    cuidado del bienestar, y convertirnos en la opción preferida para quienes buscan mejorar su calidad de vida a
-                    través de terapias manuales.”</p>
-              </div>
-            </div>
-            <div class="objectives-list">
-              <h4>Objetivos Estratégicos</h4>
-              <ul>
-                <li><i data-lucide="check-circle"></i> 100% de clientes con atención personalizada</li>
-                <li><i data-lucide="check-circle"></i> Digitalización total de reservas y CRM en tiempo real</li>
-                <li><i data-lucide="check-circle"></i> Expansión del programa Puntos TrinyBienestar</li>
-              </ul>
-            </div>
-          </div>
-
-          <div id="tab-valores" class="tab-content" role="tabpanel" hidden>
-            <div class="valores-grid">
-              <div class="valor-item"><div class="valor-icon"><i data-lucide="heart"></i></div><h4>Vocación</h4><p>Pasión por la salud corporal.</p></div>
-              <div class="valor-item"><div class="valor-icon"><i data-lucide="shield-check"></i></div><h4>Confianza</h4><p>Espacio seguro y privado.</p></div>
-              <div class="valor-item"><div class="valor-icon"><i data-lucide="star"></i></div><h4>Excelencia</h4><p>Calidad técnica 5 estrellas.</p></div>
-            </div>
-          </div>
-
-          <div id="tab-compromiso" class="tab-content" role="tabpanel" hidden>
-            <div style="background:var(--orange-50);border:1px solid var(--orange-200);border-radius:var(--radius-xl);padding:1.5rem">
-              <h4 style="font-family:var(--font-serif);font-size:1.2rem;color:var(--gray-900);margin-bottom:0.75rem">
-                🤝 Nuestro Compromiso con el Cliente
-              </h4>
-              <p style="font-size:0.875rem;color:var(--gray-700);line-height:1.7">
-                Nos comprometemos a utilizar exclusivamente aceites 100% orgánicos, toallas y camillas esterilizadas en cada cita, garantizar absoluta privacidad y responder tus consultas de soporte de forma inmediata.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===================== POR QUÉ ELEGIRNOS (7 CARDS REQUERIDAS) ===================== -->
-  <section id="beneficios" class="section why-section" aria-label="Por qué elegirnos">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-tag">Nuestra Diferencia</span>
-        <h2 class="section-title">¿Por qué elegir <span class="text-accent">Triny Masajes?</span></h2>
-        <p class="section-desc">7 pilares fundamentales que garantizan tu satisfacción absoluta</p>
-      </div>
-      <div class="why-grid" role="list">
-        <div class="why-card reveal" role="listitem">
-          <div class="why-icon"><i data-lucide="user-check"></i></div>
-          <h3>Atención Personalizada</h3>
-          <p>Tratamientos diseñados a la medida exacta de tus necesidades físicas.</p>
-          <div class="why-hover-line"></div>
-        </div>
-        <div class="why-card reveal" role="listitem">
-          <div class="why-icon"><i data-lucide="sparkles"></i></div>
-          <h3>Ambiente Relajante</h3>
-          <p>Aromaterapia, iluminación ténue y música para una desconexión total.</p>
-          <div class="why-hover-line"></div>
-        </div>
-        <div class="why-card reveal" role="listitem">
-          <div class="why-icon"><i data-lucide="award"></i></div>
-          <h3>Especialistas Certificados</h3>
-          <p>Terapeutas calificadas en Maderoterapia, Shiatsu y masoterapia clínica.</p>
-          <div class="why-hover-line"></div>
-        </div>
-        <div class="why-card reveal" role="listitem">
-          <div class="why-icon"><i data-lucide="package"></i></div>
-          <h3>Productos de Calidad</h3>
-          <p>Aceites esenciales puros, cremas hidratantes naturales e insumos premium.</p>
-          <div class="why-hover-line"></div>
-        </div>
-        <div class="why-card reveal" role="listitem">
-          <div class="why-icon"><i data-lucide="lock"></i></div>
-          <h3>Atención Privada</h3>
-          <p>Cabinas privadas con máxima confidencialidad y respeto.</p>
-          <div class="why-hover-line"></div>
-        </div>
-        <div class="why-card reveal" role="listitem">
-          <div class="why-icon"><i data-lucide="shield-check"></i></div>
-          <h3>Protocolos de Higiene</h3>
-          <p>Esterilización rigurosa y bioseguridad en cada sesión.</p>
-          <div class="why-hover-line"></div>
-        </div>
-        <div class="why-card reveal" role="listitem">
-          <div class="why-icon"><i data-lucide="clock"></i></div>
-          <h3>17+ Años de Experiencia</h3>
-          <p>Más de 5,000 clientes satisfechos garantizan nuestra excelencia.</p>
-          <div class="why-hover-line"></div>
         </div>
       </div>
     </div>
@@ -404,44 +263,6 @@
     </div>
   </section>
 
-  <section id="cobertura" class="section coverage-section" aria-label="Cobertura y funcionamiento">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Atención coordinada</span>
-        <h2 class="section-title">¿Cómo <span class="text-accent">funciona?</span></h2>
-        <p class="section-desc">Envía tu solicitud y nuestro equipo revisará ubicación, horario y disponibilidad antes de confirmar.</p>
-      </div>
-      <div class="coverage-steps">
-        <article><strong>1. Elige</strong><p>Selecciona servicios o paquetes y agrégalos al carrito.</p></article>
-        <article><strong>2. Solicita</strong><p>Completa tus datos, ubicación y horario preferido.</p></article>
-        <article><strong>3. Coordina</strong><p>El equipo revisará la cobertura y se comunicará contigo para confirmar.</p></article>
-      </div>
-      <div class="coverage-groups" id="coverageGroups" aria-live="polite"></div>
-      <p class="coverage-note">La selección de un horario no confirma la disponibilidad ni una reserva.</p>
-    </div>
-  </section>
-
-  <section id="carrito" class="section cart-section" aria-label="Carrito de servicios">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Tu selección</span>
-        <h2 class="section-title">Carrito de <span class="text-accent">servicios</span></h2>
-        <p class="section-desc">Importes estimados; la central confirmará precios y condiciones. No se procesa ningún pago en esta página.</p>
-      </div>
-      <p id="cartEmpty">Todavía no has agregado servicios.</p>
-      <div id="cartLines" hidden>
-        <div id="cartItems" class="cart-items"></div>
-        <div class="cart-summary">
-          <p>Paquetes y servicios: <strong id="cartCountSummary">0</strong></p>
-          <p>Sesiones solicitadas: <strong id="cartSessions">0</strong></p>
-          <p>Total estimado: <strong id="cartAmount">S/ 0</strong></p>
-          <button type="button" class="btn btn-primary" onclick="startBookingFromCart()">Continuar con la reserva</button>
-          <button type="button" class="btn btn-outline" onclick="TrinyCart.clear()">Vaciar carrito</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <div class="drawer-backdrop" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartDrawerTitle" aria-describedby="cartDrawerNotice" hidden>
     <aside class="side-drawer" tabindex="-1">
       <header class="drawer-header">
@@ -456,32 +277,51 @@
         <p id="drawerCartEmpty" class="drawer-empty">Tu carrito está vacío. Elige servicios o paquetes para comenzar.</p>
         <div id="drawerCartLines" hidden>
           <div id="drawerCartItems" class="cart-items"></div>
-          <div class="drawer-total">
-            <p><span>Productos y paquetes</span><strong id="drawerCartCount">0</strong></p>
-            <p><span>Sesiones incluidas</span><strong id="drawerCartSessions">0</strong></p>
-            <p class="drawer-grand-total"><span>Total estimado</span><strong id="drawerCartAmount">S/ 0</strong></p>
+          <div class="cart-drawer-footer">
+            <div class="drawer-total">
+              <p><span>Productos y paquetes</span><strong id="drawerCartCount">0</strong></p>
+              <p><span>Sesiones incluidas</span><strong id="drawerCartSessions">0</strong></p>
+              <p class="drawer-grand-total"><span>Total estimado</span><strong id="drawerCartAmount">S/ 0</strong></p>
+            </div>
+            <label class="cart-central-select" for="cartWhatsappCentral">Central de WhatsApp
+              <select id="cartWhatsappCentral">
+                <option value="central1">Central 1</option>
+                <option value="central2">Central 2</option>
+              </select>
+            </label>
+            <button type="button" class="btn btn-whatsapp" onclick="sendCartList('cartWhatsappCentral')">Continuar por WhatsApp</button>
+            <p class="cart-action-note">Se abrirá un borrador con tu selección. Revísalo y envíalo para solicitar coordinación; no confirma una reserva.</p>
+            <button type="button" class="btn btn-outline drawer-clear" onclick="TrinyCart.clear()">Vaciar carrito</button>
           </div>
-          <button type="button" class="btn btn-primary drawer-booking-cta" onclick="startBookingFromCart()">Realizar reserva online</button>
-          <button type="button" class="btn btn-outline drawer-clear" onclick="TrinyCart.clear()">Vaciar carrito</button>
         </div>
+      </div>
+    </aside>
+  </div>
 
-        <form id="cartOrderForm" class="drawer-order-form">
-          <h3>Solicitar pedido completo</h3>
-          <p>Completa estos datos para incluirlos en el borrador de WhatsApp.</p>
-          <label>Nombre<input name="name" autocomplete="name" maxlength="100" required /></label>
-          <label>Teléfono<input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" required /></label>
-          <label>Distrito o localidad<input name="location" maxlength="120" required /></label>
-          <label>Dirección completa<input name="address" autocomplete="street-address" maxlength="220" required /></label>
-          <div class="drawer-wa-actions">
-            <button type="button" class="btn btn-whatsapp" onclick="sendCartOrder('central1')">WhatsApp · Central 1</button>
-            <button type="button" class="btn btn-whatsapp" onclick="sendCartOrder('central2')">WhatsApp · Central 2</button>
+  <div class="drawer-backdrop" id="giftCardDrawer" role="dialog" aria-modal="true" aria-labelledby="giftCardDrawerTitle" hidden>
+    <aside class="side-drawer gift-card-drawer" tabindex="-1">
+      <header class="drawer-header">
+        <h2 id="giftCardDrawerTitle" class="sr-only">Solicitar una Gift Card</h2>
+        <button type="button" class="drawer-close" aria-label="Cerrar Gift Card" onclick="TrinyDrawers.close('giftCardDrawer')"><i data-lucide="x" aria-hidden="true"></i></button>
+      </header>
+      <div class="drawer-scroll gift-card-scroll">
+        <div class="gift-card-panel">
+          <div class="gift-card-intro">
+            <span class="section-tag">Un regalo para sentirse bien</span>
+            <h2 class="section-title">Gift <span class="text-accent">Cards</span></h2>
+            <p>Solicita una tarjeta de regalo. La compra y el pago se coordinan directamente con el equipo; esta web no procesa pagos.</p>
+            <p class="gift-card-terms">Vigencia y condiciones: confirmar con la central antes de adquirir la tarjeta.</p>
           </div>
-        </form>
-        <div class="drawer-list-actions">
-          <h3>Enviar solo la selección</h3>
-          <p>La central podrá pedirte los datos necesarios para coordinar.</p>
-          <button type="button" class="btn btn-whatsapp" onclick="sendCartList('central1')">Lista · Central 1</button>
-          <button type="button" class="btn btn-whatsapp" onclick="sendCartList('central2')">Lista · Central 2</button>
+          <form id="giftCardForm" class="gift-card-form">
+            <label>Nombre de quien regala<input name="sender" autocomplete="name" required maxlength="100" /></label>
+            <label>Nombre de quien recibe<input name="recipient" required maxlength="100" /></label>
+            <label>Servicio o importe deseado<input name="gift" required maxlength="120" /></label>
+            <label>Mensaje (opcional)<textarea name="message" rows="2" maxlength="300"></textarea></label>
+            <label>Central de atención
+              <select name="central"><option value="central1">Central 1</option><option value="central2">Central 2</option></select>
+            </label>
+            <button class="btn btn-primary" type="submit">Solicitar Gift Card</button>
+          </form>
         </div>
       </div>
     </aside>
@@ -489,36 +329,203 @@
 
   <section id="giftcards" class="section gift-cards-section" aria-label="Tarjetas de regalo">
     <div class="container gift-card-content">
+      <img class="gift-card-image" src="img/GIFT CARD  PARA SECTION DE GIFT CARD.png" alt="Gift Card de Triny Masajes: una hora de masaje y espacios para escribir de quién es y para quién es" loading="lazy" />
       <div>
         <span class="section-tag">Un regalo para sentirse bien</span>
         <h2 class="section-title">Gift <span class="text-accent">Cards</span></h2>
         <p class="section-desc">Solicita una tarjeta de regalo. La compra y el pago se coordinan directamente con el equipo; esta web no procesa pagos.</p>
+        <button type="button" class="btn btn-primary" onclick="TrinyDrawers.open('giftCardDrawer')">Solicitar Gift Card</button>
       </div>
-      <form id="giftCardForm" class="gift-card-form">
-        <label>Nombre de quien regala<input name="sender" required maxlength="100" /></label>
-        <label>Nombre de quien recibe<input name="recipient" required maxlength="100" /></label>
-        <label>Servicio o importe deseado<input name="gift" required maxlength="120" /></label>
-        <label>Mensaje (opcional)<textarea name="message" maxlength="300"></textarea></label>
-        <label>Central de atención
-          <select name="central"><option value="central1">Central 1</option><option value="central2">Central 2</option></select>
-        </label>
-        <button class="btn btn-primary" type="submit">Solicitar Gift Card</button>
-      </form>
-      <p class="gift-card-terms">Vigencia y condiciones: confirmar con la central antes de adquirir la tarjeta.</p>
     </div>
   </section>
 
-  <!-- ===================== GALERÍA ===================== -->
+  <!-- ===================== SOBRE TRINY ===================== -->
+  <section id="nosotros" class="section nosotros-section" aria-label="Sobre Nosotros">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Nuestra Identidad</span>
+        <h2 class="section-title">Sobre <span class="text-accent">Triny Masajes</span></h2>
+        <p class="section-desc">Historia, Misión, Visión, Valores, Objetivos y Nuestro Compromiso de Calidad</p>
+      </div>
+
+      <div class="nosotros-grid">
+        <div class="nosotros-images reveal">
+          <div class="img-stack">
+            <img src="img/Imagen para inicio de la page 2.png" alt="Equipo de Triny Masajes durante una jornada de atención" class="img-main" loading="lazy" />
+            <img src="img/Triny_Masajes_logo.png" alt="Equipo de Triny junto a su vehículo de atención a domicilio" class="img-secondary" loading="lazy" />
+            <div class="img-badge-float">
+                <i data-lucide="heart" aria-hidden="true"></i>
+                <span>Bienestar a domicilio</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="nosotros-content reveal">
+          <div class="nosotros-tabs" role="tablist" aria-label="Secciones de la Empresa">
+            <button class="tab-btn active" role="tab" aria-selected="true" id="btn-historia" onclick="switchTab(this,'tab-historia')">Historia</button>
+            <button class="tab-btn" role="tab" aria-selected="false" id="btn-mision" onclick="switchTab(this,'tab-mision')">Misión & Visión</button>
+            <button class="tab-btn" role="tab" aria-selected="false" id="btn-valores" onclick="switchTab(this,'tab-valores')">Valores</button>
+            <button class="tab-btn" role="tab" aria-selected="false" id="btn-compromiso" onclick="switchTab(this,'tab-compromiso')">Compromiso</button>
+          </div>
+
+          <div id="tab-historia" class="tab-content active" role="tabpanel">
+            <h3>¿Quienes Somos?</h3>
+            <p>Somos una empresa peruana especializada en el rubro de masajes. Contamos con una experiencia de más de 15 años en el mercado, lo cual nos ha posicionado como una de las empresas con mayor demanda en el servicio de masoterapia. Nuestra empresa ofrece una variedad de servicios que incluyen <strong>masajes antiestrés</strong>, <strong>descontracturantes</strong>, <strong>deportivos</strong>, <strong>drenaje linfático</strong>, <strong>reductores</strong>, <strong>terapéuticos</strong>, <strong>reflexología</strong> y <strong>Shiatsu</strong>. La atención a domicilio y la cobertura se coordinan con el equipo según cada solicitud.</p>
+            <p>Contamos con un equipo altamente capacitado y comprometido con brindar una excelente atención. Nuestro éxito se basa en la calidad del servicio, atención al cliente, transparencia y adaptabilidad.Tenemos dos locales ubicados en Club el Golf los Incas y Club El Polo solo para socios del Club el Jockley . Atendemos en los distritos de La Molina, Surco, San Borja, San Isidro, Miraflores, Barranco, Chorrillos, Pueblo Libre, Magdalena del Mar, Surquillo, Playas de Sur Chico y áreas cercanas a Asia.Apreciamos la oportunidad de presentarnos ante ustedes y mostrar algunas imágenes que reflejan la trayectoria de nuestra empresa y el esfuerzo conjunto de nuestro equipo a lo largo de estos años.</p>
+            <p>Brindamos atención de masajes a domicilio, previa coordinación con nuestro equipo por WhatsApp.</p>
+          </div>
+
+          <div id="tab-mision" class="tab-content" role="tabpanel" hidden>
+            <div class="mission-vision-grid">
+              <div class="mv-card">
+                <div class="mv-icon"><i data-lucide="target"></i></div>
+                <h4>Misión</h4>
+                <p>“Proveer experiencias de bienestar y relajación a domicilio, ofreciendo masajes personalizados y profesionales
+                    que promuevan la salud y el equilibrio físico y mental de nuestros clientes, en la comodidad de sus hogares.”</p>
+              </div>
+              <div class="mv-card">
+                <div class="mv-icon"><i data-lucide="telescope"></i></div>
+                <h4>Visión</h4>
+                <p>“Ser el servicio líder en la entrega de masajes a domicilio, reconocido por la excelencia y la innovación en el
+                    cuidado del bienestar, y convertirnos en la opción preferida para quienes buscan mejorar su calidad de vida a
+                    través de terapias manuales.”</p>
+              </div>
+            </div>
+            <div class="objectives-list">
+              <h4>Objetivos Estratégicos</h4>
+              <ul>
+                <li><i data-lucide="check-circle"></i> Atención personalizada según cada solicitud</li>
+                <li><i data-lucide="check-circle"></i> Revisión de disponibilidad antes de confirmar una reserva</li>
+                <li><i data-lucide="check-circle"></i> Información clara sobre servicios y condiciones</li>
+              </ul>
+            </div>
+          </div>
+
+          <div id="tab-valores" class="tab-content" role="tabpanel" hidden>
+            <div class="valores-grid">
+              <div class="valor-item"><div class="valor-icon"><i data-lucide="heart"></i></div><h4>Vocación</h4><p>Pasión por la salud corporal.</p></div>
+              <div class="valor-item"><div class="valor-icon"><i data-lucide="shield-check"></i></div><h4>Confianza</h4><p>Información clara y coordinación previa con cada cliente.</p></div>
+              <div class="valor-item"><div class="valor-icon"><i data-lucide="star"></i></div><h4>Excelencia</h4><p>Compromiso con el cuidado y la calidad de la atención.</p></div>
+              <div class="valor-item"><div class="valor-icon"><i data-lucide="scale"></i></div><h4>Honestidad</h4><p>Actuamos con transparencia e información clara sobre servicios, precios y condiciones para construir relaciones de confianza.</p></div>
+            </div>
+          </div>
+
+          <div id="tab-compromiso" class="tab-content" role="tabpanel" hidden>
+            <div style="background:var(--orange-50);border:1px solid var(--orange-200);border-radius:var(--radius-xl);padding:1.5rem">
+              <h4 style="font-family:var(--font-serif);font-size:1.2rem;color:var(--gray-900);margin-bottom:0.75rem">
+                🤝 Nuestro Compromiso con el Cliente
+              </h4>
+              <p style="font-size:0.875rem;color:var(--gray-700);line-height:1.7">
+                Coordinamos cada solicitud con claridad y atención a las necesidades indicadas. Los detalles de productos, materiales y disponibilidad se confirman con el equipo antes de reservar.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="equipo" class="section team-section" aria-label="Nuestro equipo">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Conoce a quienes te atienden</span>
+        <h2 class="section-title">Nuestro <span class="text-accent">Equipo</span></h2>
+        <p class="section-desc">Presentación basada únicamente en los nombres asociados a las fotografías disponibles en el proyecto.</p>
+      </div>
+      <div class="team-grid" id="teamGrid" role="list"></div>
+    </div>
+  </section>
+
+  <section id="beneficios" class="section why-section" aria-label="Por qué elegirnos">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Nuestra Diferencia</span>
+        <h2 class="section-title">¿Por qué elegir <span class="text-accent">Triny Masajes?</span></h2>
+        <p class="section-desc">Siete principios para una atención clara, cuidadosa y coordinada.</p>
+      </div>
+      <div class="why-grid" role="list">
+        <div class="why-card reveal" role="listitem">
+          <div class="why-icon"><i data-lucide="user-check"></i></div>
+          <h3>Atención Personalizada</h3>
+          <p>Conversamos sobre tus necesidades y preferencias para orientar cada sesión.</p>
+          <div class="why-hover-line"></div>
+        </div>
+        <div class="why-card reveal" role="listitem">
+          <div class="why-icon"><i data-lucide="sparkles"></i></div>
+          <h3>Ambiente Relajante</h3>
+          <p>Una experiencia enfocada en el descanso y el bienestar, cuidando los detalles de la atención.</p>
+          <div class="why-hover-line"></div>
+        </div>
+        <div class="why-card reveal" role="listitem">
+          <div class="why-icon"><i data-lucide="award"></i></div>
+          <h3>Terapeutas calificadas</h3>
+          <p>Atención brindada por terapeutas con experiencia en los servicios que ofrecen.</p>
+          <div class="why-hover-line"></div>
+        </div>
+        <div class="why-card reveal" role="listitem">
+          <div class="why-icon"><i data-lucide="package"></i></div>
+          <h3>Productos de Calidad</h3>
+          <p>Productos seleccionados para acompañar cada servicio y las necesidades de la sesión.</p>
+          <div class="why-hover-line"></div>
+        </div>
+        <div class="why-card reveal" role="listitem">
+          <div class="why-icon"><i data-lucide="lock"></i></div>
+          <h3>Atención Privada</h3>
+          <p>Atención a domicilio con respeto por la privacidad y confidencialidad del cliente.</p>
+          <div class="why-hover-line"></div>
+        </div>
+        <div class="why-card reveal" role="listitem">
+          <div class="why-icon"><i data-lucide="shield-check"></i></div>
+          <h3>Protocolos de Higiene</h3>
+          <p>Procedimientos de higiene y limpieza durante la preparación y prestación del servicio.</p>
+          <div class="why-hover-line"></div>
+        </div>
+        <div class="why-card reveal" role="listitem">
+          <div class="why-icon"><i data-lucide="clock"></i></div>
+          <h3>Experiencia y confianza</h3>
+          <p>Coordinamos cada solicitud con el equipo para revisar ubicación, horario y disponibilidad.</p>
+          <div class="why-hover-line"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cobertura" class="section coverage-section" aria-label="Cobertura y funcionamiento">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Atención coordinada</span>
+        <h2 class="section-title">¿Cómo <span class="text-accent">funciona?</span></h2>
+        <p class="section-desc">Envíe su solicitud y nuestro equipo revisará su ubicación, horario y disponibilidad antes de confirmar su reserva.</p>
+      </div>
+      <div class="coverage-steps">
+        <article><strong>1. Elige</strong><p>Selecciona servicios o paquetes y agrégalos al carrito.</p></article>
+        <article><strong>2. Agrégalos al carrito</strong><p>Revisa tu selección y las cantidades antes de continuar.</p></article>
+        <article><strong>3. Comparte tus datos</strong><p>Indica distrito o ubicación y un canal de contacto.</p></article>
+        <article><strong>4. Envía tu solicitud</strong><p>Elige una central de WhatsApp o consulta la alternativa disponible.</p></article>
+        <article><strong>5. Coordinamos</strong><p>El equipo revisará ubicación, horario y disponibilidad.</p></article>
+        <article><strong>6. Confirmación</strong><p>La reserva queda confirmada solo cuando Triny valide la disponibilidad y las condiciones.</p></article>
+      </div>
+      <div class="coverage-groups" id="coverageGroups" aria-live="polite"></div>
+      <p class="coverage-note">La selección de un horario no confirma la disponibilidad ni una reserva.</p>
+    </div>
+  </section>
+
   <section id="galeria" class="section gallery-section" aria-label="Galería">
     <div class="container">
       <div class="section-header reveal">
         <span class="section-tag">Fotos Reales</span>
         <h2 class="section-title">Nuestra <span class="text-accent">Galería</span></h2>
+        <p class="section-desc">Postales seleccionadas por destino, presentadas sin rótulos ni descripciones sobre las fotografías.</p>
       </div>
 
-      <div class="gallery-masonry" id="galleryGrid" role="list"></div>
+      <div class="gallery-filter" role="group" aria-label="Elegir galería por destino">
+        <button type="button" class="filter-btn" onclick="filterGallery('lima',this)" aria-pressed="false">Galería Lima</button>
+        <button type="button" class="filter-btn" onclick="filterGallery('corporativa',this)" aria-pressed="false">Galería Corporativa</button>
+        <button type="button" class="filter-btn active" onclick="filterGallery('playas',this)" aria-pressed="true">Galería Playas</button>
+      </div>
+      <div class="gallery-masonry gallery-review-grid" id="galleryGrid" role="list"></div>
 
-      <div class="before-after-section reveal">
+      <div class="before-after-section reveal" hidden>
         <h3 class="ba-title">Resultados Antes & Después</h3>
         <div class="before-after-grid" id="beforeAfterGrid"></div>
       </div>
@@ -531,7 +538,7 @@
       <div class="section-header reveal">
         <span class="section-tag">Opiniones Reales</span>
         <h2 class="section-title">Testimonios & <span class="text-accent">Video Experiencias</span></h2>
-        <p class="section-desc">Clientes reales compartiendo sus resultados con Triny Masajes</p>
+        <p class="section-desc">Los testimonios solo se publicarán tras validar su contenido y contar con autorización.</p>
       </div>
 
       <div class="testimonials-grid" id="testimonialsGrid" role="list"></div>
@@ -555,6 +562,7 @@
       <div class="section-header reveal">
         <span class="section-tag">Salud & Consejos</span>
         <h2 class="section-title">Nuestro <span class="text-accent">Blog</span></h2>
+        <p class="section-desc">Información general para orientar tu bienestar; no sustituye una consulta ni recomendaciones de profesionales de salud.</p>
       </div>
       <div class="blog-grid" id="blogGrid" role="list"></div>
     </div>
@@ -575,7 +583,7 @@
   <div class="drawer-backdrop" id="bookingDrawer" role="dialog" aria-modal="true" aria-labelledby="bookingDrawerTitle" hidden>
    <aside class="side-drawer booking-drawer" tabindex="-1">
     <header class="drawer-header">
-      <div><span class="section-tag">Reserva online</span><h2 id="bookingDrawerTitle">Solicita tu reserva</h2></div>
+      <div><span class="section-tag">Solicitud por WhatsApp</span><h2 id="bookingDrawerTitle">Solicita tu reserva</h2></div>
       <button type="button" class="drawer-close" aria-label="Cerrar reserva" onclick="TrinyDrawers.close('bookingDrawer')"><i data-lucide="x" aria-hidden="true"></i></button>
     </header>
     <div class="drawer-scroll">
@@ -584,14 +592,14 @@
       <div class="section-header reveal">
         <span class="section-tag">Agenda Tu Cita</span>
         <h2 class="section-title">Solicita tu <span class="text-accent">reserva</span></h2>
-        <p class="section-desc">Envía una solicitud con varios servicios. La fecha, disponibilidad y cobertura requieren confirmación de Triny.</p>
+        <p class="section-desc">Reserva online: Próximamente. Elige un masaje y coordina tu solicitud por WhatsApp; fecha, disponibilidad y cobertura requieren confirmación de Triny.</p>
       </div>
 
       <div class="booking-card reveal">
         <div class="booking-steps">
           <div class="booking-step active" data-step="1" id="step-indicator-1">
             <div class="step-num">1</div>
-            <div class="step-label">Carrito</div>
+            <div class="step-label">Masaje</div>
           </div>
           <div class="step-line"></div>
           <div class="booking-step" data-step="2" id="step-indicator-2">
@@ -764,8 +772,8 @@
             <div class="contact-info-item">
               <div class="ci-icon"><i data-lucide="mail" aria-hidden="true"></i></div>
               <div>
-                <strong>Correo Oficial</strong>
-                <p><a href="mailto:soporte@trinymasajes.com">soporte@trinymasajes.com</a></p>
+                <strong>Correo de Atención al Cliente</strong>
+                <p>Pendiente de confirmar con el equipo.</p>
               </div>
             </div>
           </div>
@@ -845,33 +853,14 @@
           <div style="font-size:3rem">👑</div>
           <h2 style="font-family:var(--font-serif);font-size:1.75rem;color:var(--gray-900)">Programa Puntos TrinyBienestar</h2>
         </div>
-        <div style="background:linear-gradient(135deg,var(--orange-600),var(--orange-800));color:white;padding:1.5rem;border-radius:var(--radius-xl);text-align:center;margin-bottom:1.5rem">
-          <div style="font-size:0.8rem;text-transform:uppercase">Tu Saldo Actual</div>
-          <div style="font-family:var(--font-serif);font-size:3rem;font-weight:900"><span class="points-balance-num">120</span> PTS</div>
-        </div>
-        <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1rem;color:var(--gray-900)">Recompensas</h3>
-        <div style="display:flex;flex-direction:column;gap:0.75rem">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-lg)">
-            <div><strong>Aromaterapia Gratis</strong><br/><small style="color:var(--primary)">50 Pts</small></div>
-            <button class="btn btn-primary" style="font-size:0.75rem;padding:0.4rem 0.875rem" onclick="window.TrinyPoints.redeemReward(50,'Aromaterapia Gratis')">Canjear</button>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem;background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-lg)">
-            <div><strong>Descuento S/ 25</strong><br/><small style="color:var(--primary)">100 Pts</small></div>
-            <button class="btn btn-primary" style="font-size:0.75rem;padding:0.4rem 0.875rem" onclick="window.TrinyPoints.redeemReward(100,'Descuento S/ 25')">Canjear</button>
-          </div>
+        <p style="color:var(--gray-600);line-height:1.7">Consulta con Atención al Cliente las condiciones vigentes, tu saldo y las opciones de canje. La página no confirma puntos ni recompensas.</p>
+        <div class="drawer-wa-actions">
+          <a class="btn btn-whatsapp" href="#contacto" data-whatsapp-central="central1" data-whatsapp-message="Hola, quisiera consultar las condiciones del programa TrinyBienestar." target="_blank" rel="noopener noreferrer">Consultar · Central 1</a>
+          <a class="btn btn-whatsapp" href="#contacto" data-whatsapp-central="central2" data-whatsapp-message="Hola, quisiera consultar las condiciones del programa TrinyBienestar." target="_blank" rel="noopener noreferrer">Consultar · Central 2</a>
         </div>
       </div>
     </div>
   </div>
-
-  <section id="reclamaciones" class="section claims-section" aria-label="Libro de Reclamaciones">
-    <div class="container">
-      <img src="img/Aviso de libro de reclamaciones.png" alt="" aria-hidden="true" loading="lazy" />
-      <h2>Libro de Reclamaciones</h2>
-      <p>Prepara tu información en un borrador de WhatsApp. Este sitio estático no almacena datos ni registra formalmente una reclamación.</p>
-      <button type="button" class="btn btn-primary" onclick="TrinyDrawers.open('claimsDrawer')">Abrir formulario de reclamación o queja</button>
-    </div>
-  </section>
 
   <div class="drawer-backdrop" id="claimsDrawer" role="dialog" aria-modal="true" aria-labelledby="claimsDrawerTitle" aria-describedby="claimsPrivacyNotice" hidden>
     <aside class="side-drawer claims-drawer" tabindex="-1">
@@ -985,7 +974,7 @@
             <ul>
               <li><a href="#contacto" data-whatsapp-central="central1" data-whatsapp-message="Hola, quisiera contactar a Triny.">Central 1 · <span data-central-display="central1">WhatsApp</span></a></li>
               <li><a href="#contacto" data-whatsapp-central="central2" data-whatsapp-message="Hola, quisiera contactar a Triny.">Central 2 · <span data-central-display="central2">WhatsApp</span></a></li>
-              <li><a href="mailto:soporte@trinymasajes.com">soporte@trinymasajes.com</a></li>
+              <li>Correo oficial de soporte: pendiente de confirmar</li>
             </ul>
           </div>
           <div class="footer-col">
@@ -993,7 +982,7 @@
             <ul>
               <li><a href="#privacidad">Aviso de privacidad</a></li>
               <li><a href="#condiciones">Términos y condiciones</a></li>
-              <li><a href="#reclamaciones">Libro de Reclamaciones</a></li>
+              <li><a class="footer-claims-link" href="#claimsDrawer" onclick="event.preventDefault();TrinyDrawers.open('claimsDrawer')"><img src="img/Aviso de libro de reclamaciones.png" alt="" loading="lazy" /> Libro de Reclamaciones</a></li>
             </ul>
           </div>
         </div>
@@ -1011,6 +1000,7 @@
   <!-- Scripts -->
   <script src="js/config.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/image-inventory.js"></script>
   <script src="js/notifications.js"></script>
   <script src="js/whatsapp.js"></script>
   <script src="js/drawers.js"></script>

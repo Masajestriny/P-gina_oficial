@@ -19,47 +19,59 @@
     window.showToast?.('Borrador preparado', 'Revisa el mensaje en WhatsApp. Este sitio no confirma recepción ni reserva.', 'info', 6000);
   }
 
-  function describeCart() {
-    return window.TrinyCart.getItems().map(item =>
-      `• ${item.name} × ${item.quantity}${item.type === 'package' ? ` paquete(s), ${item.sessions} sesiones incluidas` : ` sesión(es)`} — S/ ${item.lineTotal} estimado`
-    ).join('\n');
+  function getCartDuration(items) {
+    let totalMinutes = 0;
+    let hasUnknownDuration = false;
+
+    items.forEach(item => {
+      const match = String(item.duration || '').match(/(\d+)\s*(min(?:utos?)?|h(?:ora)?s?)/i);
+      if (!match) {
+        hasUnknownDuration = true;
+        return;
+      }
+      const unitMinutes = /^h/i.test(match[2]) ? 60 : 1;
+      totalMinutes += Number(match[1]) * unitMinutes * (item.sessions || item.quantity);
+    });
+
+    if (hasUnknownDuration) return 'Por confirmar según la duración de los paquetes seleccionados';
+    if (!totalMinutes) return 'Por confirmar';
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return [hours ? `${hours} h` : '', minutes ? `${minutes} min` : '']
+      .filter(Boolean)
+      .join(' ');
   }
 
-  window.sendCartOrder = function(centralId) {
-    const form = document.getElementById('cartOrderForm');
-    if (!form?.reportValidity()) return;
-    const items = window.TrinyCart.getItems();
-    if (!items.length) {
-      window.showToast?.('Carrito vacío', 'Agrega un servicio o paquete para preparar el pedido.', 'warning');
-      return;
-    }
-    const data = new FormData(form);
-    const message = [
-      'Solicitud de pedido — Masajes Triny Delivery',
-      `Nombre: ${String(data.get('name')).trim()}`,
-      `Teléfono: ${String(data.get('phone')).trim()}`,
-      `Distrito o localidad: ${String(data.get('location')).trim()}`,
-      `Dirección: ${String(data.get('address')).trim()}`,
-      'Servicios y paquetes solicitados:',
-      describeCart(),
-      `Total referencial: S/ ${window.TrinyCart.getTotals().amount}. Confirmar precios, cobertura y disponibilidad con la central.`,
-      'Este mensaje es un borrador que revisaré y enviaré personalmente. No es una reserva confirmada ni un pago.'
-    ].join('\n');
-    openWhatsAppDraft(message, centralId);
-  };
+  function getCentralId(selectorOrId) {
+    if (selectorOrId === 'central2' || selectorOrId === 'central1') return selectorOrId;
+    return document.getElementById(selectorOrId)?.value === 'central2' ? 'central2' : 'central1';
+  }
 
-  window.sendCartList = function(centralId) {
+  window.sendCartList = function(selectorOrId) {
     const items = window.TrinyCart.getItems();
     if (!items.length) {
       window.showToast?.('Carrito vacío', 'Agrega un servicio o paquete para preparar la lista.', 'warning');
       return;
     }
+
     const message = [
-      'Consulta por servicios y paquetes — Masajes Triny Delivery',
-      describeCart(),
-      'Quisiera consultar disponibilidad y coordinación. La central puede solicitarme los datos necesarios.',
-      'Borrador para revisar y enviar personalmente; no confirma recepción, reserva ni pago.'
+      'Hola, Triny Masajes Delivery. Quisiera consultar por los siguientes servicios o paquetes:',
+      '',
+      '*MI SELECCIÓN*',
+      ...items.map(item => {
+        const quantity = item.type === 'package'
+          ? `${item.quantity} paquete(s), ${item.sessions} sesiones incluidas`
+          : `${item.quantity} ${item.quantity === 1 ? 'sesión' : 'sesiones'}`;
+        return `- ${item.name}: ${quantity} — S/ ${item.priceNum} c/u — Subtotal S/ ${item.lineTotal}`;
+      }),
+      `*Total estimado:* S/ ${window.TrinyCart.getTotals().amount}`,
+      '',
+      `*Duración estimada:* ${getCartDuration(items)}.`,
+      'Por favor, confirmen precios y condiciones. Este mensaje es una consulta; no constituye una reserva ni un pago.'
     ].join('\n');
-    openWhatsAppDraft(message, centralId);
+
+    openWhatsAppDraft(message, getCentralId(selectorOrId));
   };
+
+  window.sendCartOrder = window.sendCartList;
 })();

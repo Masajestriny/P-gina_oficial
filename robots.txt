@@ -3,7 +3,3 @@ Allow: /
 
 # Sitemap
 Sitemap: https://trinymasajes.com/sitemap.xml
-
-# Disallow admin areas (future)
-Disallow: /admin/
-Disallow: /crm/api/

@@ -1,10 +1,12 @@
-const CACHE_NAME = 'triny-masajes-v1.2.8';
+const CACHE_PREFIX = 'triny-masajes-';
+const CACHE_NAME = `${CACHE_PREFIX}v1.4.2`;
 const STATIC_ASSETS = [
   './',
   './index.html',
   './css/style.css',
   './js/config.js',
   './js/data.js',
+  './js/image-inventory.js',
   './js/notifications.js',
   './js/whatsapp.js',
   './js/drawers.js',
@@ -30,22 +32,13 @@ const STATIC_ASSETS = [
   './img/Masaje de Refloxología.png',
   './img/Masaje anticelulitico.png',
   './img/Masaje relajante.png',
-  './img/Imagen para carrousel 1.png',
-  './img/Imagen para carrousel 2.png',
-  './img/Imagen para carrousel 3.jpg',
-  './img/imagen para carrousel 4.jpg',
-  './img/Imagen para carrousel 5.png',
-  './img/Imagen para carrousel 6.jfif',
-  './img/Imagen para galeria de triny 1.jpg',
   './img/Imagen para galeria de triny 2.jpg',
-  './img/Imagen para galeria de triny 3.jpg',
-  './img/Imagen para galeria de triny 4.png',
-  './img/Imagen para galeria de triny 5.png',
-  './img/Imagen para galeria de triny 6.png',
-  './img/Imagen para galeria de triny 7.png',
-  './img/Imagen para galeria de triny 8.jpg',
   './img/Aviso de libro de reclamaciones.png'
 ];
+const STATIC_PATHS = new Set(
+  STATIC_ASSETS.map(asset => new URL(asset, self.registration.scope).pathname)
+);
+const INDEX_URL = new URL('./index.html', self.registration.scope).href;
 
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -63,7 +56,7 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
       .then(keys => Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+        keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE_NAME).map(key => caches.delete(key))
       ))
       .then(() => self.clients.claim())
   );
@@ -76,15 +69,31 @@ self.addEventListener('fetch', event => {
   const requestUrl = new URL(request.url);
   if (requestUrl.origin !== self.location.origin) return;
 
+  const isStaticAsset = STATIC_PATHS.has(requestUrl.pathname);
+  if (!isStaticAsset && request.mode !== 'navigate') return;
+
   event.respondWith(
-    caches.match(request)
-      .then(cached => cached || fetch(request).then(response => {
-        if (response.ok) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+    caches.open(CACHE_NAME).then(async cache => {
+      const cacheKey = new URL(request.url);
+      cacheKey.search = '';
+      const cached = await cache.match(cacheKey.href);
+
+      if (cached && request.mode !== 'navigate') return cached;
+
+      try {
+        const response = await fetch(request);
+        if (response.ok && isStaticAsset) {
+          event.waitUntil(cache.put(cacheKey.href, response.clone()));
         }
         return response;
-      }))
-      .catch(() => caches.match('./index.html'))
+      } catch (error) {
+        if (request.mode === 'navigate') {
+          const offlinePage = await cache.match(INDEX_URL);
+          if (offlinePage) return offlinePage;
+        }
+        if (cached) return cached;
+        throw error;
+      }
+    })
   );
 });

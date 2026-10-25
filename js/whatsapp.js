@@ -41,26 +41,92 @@
     });
 
     const socialMarkup = window.TRINY_CONFIG.social.map(item => `
-      <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="sn-link">
-        <span class="sn-name">${item.label}</span>
+      <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="sn-link" aria-label="${item.label} de Triny Masajes" title="${item.label}">
+        <img class="sn-icon" src="${item.icon}" alt="" loading="lazy" />
       </a>
     `).join('');
     const footerSocials = document.getElementById('footerSocialLinks');
     if (footerSocials) footerSocials.innerHTML = socialMarkup;
-    const headerSocials = document.getElementById('headerSocialLinks');
-    if (headerSocials) headerSocials.innerHTML = socialMarkup;
   }
 
   document.addEventListener('DOMContentLoaded', configureContactLinks);
 
   let lastScroll = 0;
-  const floatBtn = document.getElementById('whatsappFloat');
+  const floatButtons = Array.from(document.querySelectorAll('.whatsapp-float'));
   window.addEventListener('scroll', () => {
     const current = window.scrollY;
-    if (floatBtn) {
-      floatBtn.style.opacity = current > 200 ? '1' : '0.7';
-      floatBtn.style.transform = current > lastScroll && current > 400 ? 'scale(0.85)' : 'scale(1)';
-    }
+    floatButtons.forEach(button => {
+      button.style.opacity = current > 200 ? '1' : '0.7';
+      button.style.transform = current > lastScroll && current > 400 ? 'scale(0.85)' : 'scale(1)';
+    });
     lastScroll = current;
   }, { passive: true });
+
+  floatButtons.forEach(button => {
+    let pointerId = null;
+    let startX = 0;
+    let startY = 0;
+    let startLeft = 0;
+    let startTop = 0;
+    let moved = false;
+    let suppressClick = false;
+
+    button.addEventListener('pointerdown', event => {
+      if (!event.isPrimary || event.button !== 0) return;
+      const rect = button.getBoundingClientRect();
+      pointerId = event.pointerId;
+      startX = event.clientX;
+      startY = event.clientY;
+      startLeft = rect.left;
+      startTop = rect.top;
+      moved = false;
+      button.setPointerCapture(pointerId);
+    });
+
+    button.addEventListener('pointermove', event => {
+      if (event.pointerId !== pointerId) return;
+      const deltaX = event.clientX - startX;
+      const deltaY = event.clientY - startY;
+      if (!moved && Math.hypot(deltaX, deltaY) < 5) return;
+      moved = true;
+      const rect = button.getBoundingClientRect();
+      const left = Math.max(0, Math.min(window.innerWidth - rect.width, startLeft + deltaX));
+      const top = Math.max(0, Math.min(window.innerHeight - rect.height, startTop + deltaY));
+      button.style.left = `${left}px`;
+      button.style.top = `${top}px`;
+      button.style.right = 'auto';
+      button.style.bottom = 'auto';
+      button.dataset.dragged = 'true';
+      button.classList.add('is-dragging');
+    });
+
+    const finishDrag = event => {
+      if (event.pointerId !== pointerId) return;
+      if (button.hasPointerCapture(pointerId)) button.releasePointerCapture(pointerId);
+      pointerId = null;
+      button.classList.remove('is-dragging');
+      if (moved) {
+        suppressClick = true;
+        window.setTimeout(() => { suppressClick = false; }, 500);
+      }
+    };
+
+    button.addEventListener('pointerup', finishDrag);
+    button.addEventListener('pointercancel', finishDrag);
+    button.addEventListener('click', event => {
+      if (!suppressClick) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      suppressClick = false;
+    }, true);
+  });
+
+  window.addEventListener('resize', () => {
+    floatButtons.forEach(button => {
+      if (!button.dataset.dragged) return;
+      const rect = button.getBoundingClientRect();
+      button.style.left = `${Math.max(0, Math.min(window.innerWidth - rect.width, rect.left))}px`;
+      button.style.top = `${Math.max(0, Math.min(window.innerHeight - rect.height, rect.top))}px`;
+    });
+  });
 })();

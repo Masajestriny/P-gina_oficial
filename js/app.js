@@ -14,10 +14,12 @@
   let productCat     = 'all';
   let productSort    = 'default';
   let productSearch  = '';
-  let galleryFilter  = 'all';
+  let galleryFilter  = 'playas';
+  let lightboxCloser = null;
 
   // ── DOM Ready ──
   document.addEventListener('DOMContentLoaded', function() {
+    orderLandingSections();
     initSplash();
     initNavbar();
     initScrollReveal();
@@ -28,6 +30,7 @@
     renderPromos();
     renderPackages();
     renderCoverage();
+    renderTeam();
     renderGallery();
     renderTestimonials();
     renderBlog();
@@ -38,6 +41,21 @@
     initTabSystem();
     lucide.createIcons();
   });
+
+  function orderLandingSections() {
+    const orderedIds = [
+      'servicios', 'promociones', 'giftcards', 'nosotros', 'equipo', 'beneficios',
+      'cobertura', 'carrito', 'galeria', 'testimonios', 'videos', 'blog',
+      'faq', 'contacto'
+    ];
+    let previous = document.getElementById('inicio');
+    orderedIds.forEach(id => {
+      const section = document.getElementById(id);
+      if (!previous || !section) return;
+      previous.insertAdjacentElement('afterend', section);
+      previous = section;
+    });
+  }
 
   // ────────────────────────────────────────────
   //  SPLASH SCREEN
@@ -81,6 +99,7 @@
       const isOpen = navMenu?.classList.toggle('open');
       hamburger.classList.toggle('open', isOpen);
       hamburger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      hamburger.setAttribute('aria-label', isOpen ? 'Cerrar menú de navegación' : 'Abrir menú de navegación');
       document.body.classList.toggle('no-scroll', isOpen);
     });
 
@@ -90,8 +109,29 @@
         navMenu.classList.remove('open');
         hamburger?.classList.remove('open');
         hamburger?.setAttribute('aria-expanded', 'false');
+        hamburger?.setAttribute('aria-label', 'Abrir menú de navegación');
         document.body.classList.toggle('no-scroll', !!document.querySelector('.drawer-backdrop:not([hidden]), .modal-overlay:not([hidden])'));
       });
+    });
+
+    hamburger?.addEventListener('keydown', event => {
+      if (event.key !== 'Escape' || !navMenu?.classList.contains('open')) return;
+      navMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      hamburger.setAttribute('aria-label', 'Abrir menú de navegación');
+      document.body.classList.toggle('no-scroll', !!document.querySelector('.drawer-backdrop:not([hidden]), .modal-overlay:not([hidden])'));
+      hamburger.focus();
+    });
+
+    navMenu?.addEventListener('keydown', event => {
+      if (event.key !== 'Escape' || !navMenu.classList.contains('open')) return;
+      navMenu.classList.remove('open');
+      hamburger?.classList.remove('open');
+      hamburger?.setAttribute('aria-expanded', 'false');
+      hamburger?.setAttribute('aria-label', 'Abrir menú de navegación');
+      document.body.classList.toggle('no-scroll', !!document.querySelector('.drawer-backdrop:not([hidden]), .modal-overlay:not([hidden])'));
+      hamburger?.focus();
     });
   }
 
@@ -180,7 +220,11 @@
           <div class="service-img-wrap">
             <img src="${s.img}" alt="${s.name} en Triny Masajes" loading="lazy"
                  onerror="this.hidden=true" />
-            <div class="service-actions-top">
+          </div>
+          <div class="service-body">
+            <div class="service-card-heading">
+              <h3 class="service-name">${s.name}</h3>
+              <div class="service-actions-top">
               <button class="sa-btn${isFav?' favorited':''}" onclick="toggleFavorite(${s.id},this)"
                 aria-label="${isFav?'Quitar de':'Agregar a'} favoritos">
                 <i data-lucide="heart"></i>
@@ -188,10 +232,8 @@
               <button class="sa-btn" onclick="shareService('${s.name}')" aria-label="Compartir servicio">
                 <i data-lucide="share-2"></i>
               </button>
+              </div>
             </div>
-          </div>
-          <div class="service-body">
-            <h3 class="service-name">${s.name}</h3>
             <p class="service-desc">${s.desc}</p>
             <div class="service-meta">
               <span class="service-duration"><i data-lucide="clock"></i>${s.duration}</span>
@@ -279,8 +321,11 @@
           <ul>${s.benefits.map(b => `<li>${b}</li>`).join('')}</ul>
         </div>
         <div class="service-modal-actions">
-          <button class="btn btn-primary" onclick="TrinyCart.add('service',${s.id},1);closeModal('serviceModal');startBookingFromCart()">
-            <i data-lucide="shopping-cart" aria-hidden="true"></i> Agregar al carrito y continuar
+          <button class="btn btn-outline" onclick="TrinyCart.add('service',${s.id},1);closeModal('serviceModal')">
+            <i data-lucide="shopping-cart" aria-hidden="true"></i> Agregar al carrito
+          </button>
+          <button class="btn btn-primary" onclick="closeModal('serviceModal');startBookingForService(${s.id})">
+            Solicitar este masaje
           </button>
         </div>
       </div>
@@ -471,29 +516,44 @@
   };
 
   // ────────────────────────────────────────────
+  //  TEAM
+  // ────────────────────────────────────────────
+  function renderTeam() {
+    const grid = document.getElementById('teamGrid');
+    if (!grid) return;
+    grid.innerHTML = TEAM_DATA.map(member => `
+      <article class="team-card reveal" role="listitem">
+        <div class="team-photo">
+          <img src="${member.image}" alt="${member.name}" loading="lazy" />
+        </div>
+        <h3>${member.name}</h3>
+      </article>
+    `).join('');
+    grid.querySelectorAll('.team-card.reveal').forEach(card => card.classList.add('visible'));
+  }
+
+  // ────────────────────────────────────────────
   //  GALLERY
   // ────────────────────────────────────────────
   function renderGallery() {
     const grid = document.getElementById('galleryGrid');
     if (!grid) return;
 
-    const data = GALLERY_DATA.filter(g => galleryFilter === 'all' || g.category === galleryFilter);
+    const data = GALLERY_DATA.filter(image => image.category === galleryFilter);
 
-    grid.innerHTML = data.map(g => `
-      <figure class="gallery-item${g.tall ? ' tall' : ''}"
-              role="button"
-              onclick="openLightbox('${g.src}','${g.alt}')"
-              tabindex="0"
-              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openLightbox('${g.src}','${g.alt}')}"
-              aria-label="Ver imagen: ${g.alt}">
-        <img src="${g.src}" alt="${g.alt}" loading="lazy" onerror="this.closest('figure').hidden=true" />
-        <div class="gallery-overlay" aria-hidden="true">
-          <svg class="gallery-overlay-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M15 3h6v6M14 10l6.1-6.1M9 21H3v-6M10 14l-6.1 6.1"/>
-          </svg>
-        </div>
-      </figure>
-    `).join('');
+    grid.innerHTML = data.length ? data.map(image => `
+      <button class="gallery-preview" type="button" role="listitem"
+            onclick="openLightbox('${image.src}', this, '${image.alt}')"
+              aria-label="Ampliar fotografía: ${image.alt}">
+        <img src="${image.src}" alt="${image.alt}" loading="lazy" />
+      </button>
+    `).join('') : `
+      <p class="gallery-pending" role="status">
+        ${galleryFilter === 'lima'
+          ? 'Aún no contamos con fotografías verificadas de lugares de Lima para esta galería. No mostramos retratos del equipo como sustituto.'
+          : 'Todavía no hay fotografías disponibles para esta galería.'}
+      </p>
+    `;
 
     // Before & After
     const baGrid = document.getElementById('beforeAfterGrid');
@@ -523,20 +583,66 @@
   window.filterGallery = function(cat, btn) {
     galleryFilter = cat;
     document.querySelectorAll('#galeria .gallery-filter .filter-btn').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
+    document.querySelectorAll('#galeria .gallery-filter .filter-btn').forEach(button => button.setAttribute('aria-pressed', 'false'));
+    if (btn) {
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+    }
     renderGallery();
   };
 
-  window.openLightbox = function(src, alt) {
-    const existing = document.getElementById('lightboxOverlay');
-    if (existing) existing.remove();
+  window.toggleBlogArticle = function(button) {
+    const article = document.getElementById(button.getAttribute('aria-controls'));
+    if (!article) return;
+    const expanded = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', String(!expanded));
+    article.hidden = expanded;
+    const label = button.querySelector('span');
+    if (label) label.textContent = expanded ? 'Leer artículo completo' : 'Cerrar artículo';
+  };
+
+  window.openLightbox = function(src, trigger, alt = '') {
+    if (lightboxCloser) lightboxCloser();
+    const opener = trigger || document.activeElement;
     const lb = document.createElement('div');
     lb.id = 'lightboxOverlay';
-    lb.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;cursor:zoom-out;animation:modalBgIn 0.2s ease';
-    lb.innerHTML = `<img src="${src}" alt="${alt}" style="max-width:92vw;max-height:90vh;object-fit:contain;border-radius:12px;box-shadow:0 0 60px rgba(0,0,0,0.5);" loading="lazy"/>`;
-    lb.addEventListener('click', () => lb.remove());
-    lb.addEventListener('keydown', e => { if (e.key === 'Escape' || e.key === 'Enter') lb.remove(); });
+    lb.className = 'gallery-lightbox';
+    lb.setAttribute('role', 'dialog');
+    lb.setAttribute('aria-modal', 'true');
+    lb.setAttribute('aria-label', alt ? `Vista ampliada: ${alt}` : 'Vista ampliada de la imagen');
+    lb.tabIndex = -1;
+    const image = document.createElement('img');
+    image.src = src;
+    image.alt = alt;
+    lb.appendChild(image);
+
+    const close = () => {
+      document.removeEventListener('keydown', handleKeydown, true);
+      document.removeEventListener('focusin', keepFocusInDialog, true);
+      lb.remove();
+      lightboxCloser = null;
+      if (opener && opener.isConnected && typeof opener.focus === 'function') opener.focus();
+    };
+    const handleKeydown = event => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        event.stopPropagation();
+        close();
+      } else if (event.key === 'Tab') {
+        event.preventDefault();
+        lb.focus();
+      }
+    };
+    const keepFocusInDialog = event => {
+      if (!lb.contains(event.target)) lb.focus();
+    };
+    lb.addEventListener('click', event => {
+      if (event.target === lb) close();
+    });
     document.body.appendChild(lb);
+    lightboxCloser = close;
+    document.addEventListener('keydown', handleKeydown, true);
+    document.addEventListener('focusin', keepFocusInDialog, true);
     lb.focus();
   };
 
@@ -546,6 +652,10 @@
   function renderTestimonials() {
     const grid = document.getElementById('testimonialsGrid');
     if (!grid) return;
+    if (!TESTIMONIALS_DATA.length) {
+      grid.innerHTML = '<p class="testimonials-empty">Aún no hay opiniones verificadas y autorizadas para publicar.</p>';
+      return;
+    }
     grid.innerHTML = TESTIMONIALS_DATA.map(t => `
       <article class="testimonial-card" role="listitem">
         <div class="test-header">
@@ -567,28 +677,46 @@
   function renderBlog() {
     const grid = document.getElementById('blogGrid');
     if (!grid) return;
+    if (!BLOG_DATA.length) {
+      grid.innerHTML = '<p class="blog-pending">Las publicaciones se mostrarán aquí cuando sus contenidos, autoría y fecha estén validados.</p>';
+      return;
+    }
     grid.innerHTML = BLOG_DATA.map(b => `
       <article class="blog-card" role="listitem">
-        <div class="blog-img-wrap">
-          <img src="${b.img}" alt="${b.title}" loading="lazy"
-               onerror="this.src='img/Masaje relajante.png'" />
-        </div>
+        ${b.img ? `
+          <div class="blog-img-wrap">
+            <img src="${b.img}" alt="${b.imgAlt || ''}" loading="lazy" />
+          </div>
+        ` : ''}
         <div class="blog-body">
           <span class="blog-cat">${b.category}</span>
-          <h3 class="blog-title">${b.title}</h3>
+          <h3 class="blog-title" id="blog-title-${b.id}">${b.title}</h3>
           <p class="blog-excerpt">${b.excerpt}</p>
           <div class="blog-meta">
-            <span class="blog-author">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-              </svg>
-              ${b.author}
-            </span>
-            <span>${b.date} · ${b.readTime}</span>
+            <span>Lectura orientativa</span>
+            <span>${b.readTime}</span>
           </div>
-          <button class="blog-read-more" onclick="showToast('Próximamente','El blog completo estará disponible pronto.','info')" aria-label="Leer artículo completo">
-            Leer más <i data-lucide="arrow-right"></i>
+          <button type="button" class="blog-read-more" onclick="toggleBlogArticle(this)"
+                  aria-expanded="false" aria-controls="blog-article-${b.id}">
+            <span>Leer artículo completo</span><i data-lucide="arrow-right" aria-hidden="true"></i>
           </button>
+          <div class="blog-article-content" id="blog-article-${b.id}" role="region"
+               aria-labelledby="blog-title-${b.id}" hidden>
+            ${b.sections.map(section => `
+              <section class="blog-article-section">
+                <h4>${section.heading}</h4>
+                <p>${section.text}</p>
+              </section>
+            `).join('')}
+            <div class="blog-sources">
+              <h4>Fuentes para ampliar</h4>
+              <ul>
+                ${b.sources.map(source => `
+                  <li><a href="${source.href}" target="_blank" rel="noopener noreferrer">${source.label}</a></li>
+                `).join('')}
+              </ul>
+            </div>
+          </div>
         </div>
       </article>
     `).join('');
@@ -603,17 +731,14 @@
     if (!container) return;
     container.innerHTML = FAQ_DATA.map((f, i) => `
       <div class="faq-item" role="listitem">
-        <div class="faq-question" 
-             onclick="toggleFAQ(this)" 
-             role="button" 
-             tabindex="0"
+        <button class="faq-question" type="button"
+             onclick="toggleFAQ(this)"
              aria-expanded="false"
-             aria-controls="faq-answer-${i}"
-             onkeydown="if(event.key==='Enter'||event.key===' ')toggleFAQ(this)">
+             aria-controls="faq-answer-${i}">
           <span>${f.q}</span>
           <span class="faq-chevron" aria-hidden="true"><i data-lucide="chevron-down"></i></span>
-        </div>
-        <div class="faq-answer" id="faq-answer-${i}" role="region">
+        </button>
+        <div class="faq-answer" id="faq-answer-${i}" role="region" hidden>
           <div class="faq-answer-inner">${f.a}</div>
         </div>
       </div>
@@ -629,12 +754,16 @@
     document.querySelectorAll('.faq-item.open').forEach(i => {
       i.classList.remove('open');
       i.querySelector('.faq-question')?.setAttribute('aria-expanded', 'false');
+      const answer = i.querySelector('.faq-answer');
+      if (answer) answer.hidden = true;
     });
 
     // Open clicked (unless it was already open)
     if (!isOpen) {
       item.classList.add('open');
       questionEl.setAttribute('aria-expanded', 'true');
+      const answer = item.querySelector('.faq-answer');
+      if (answer) answer.hidden = false;
     }
   };
 

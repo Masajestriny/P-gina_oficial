@@ -4,9 +4,14 @@
   const STORAGE_KEY = 'triny_cart_v1';
   const MAX_QUANTITY = 99;
 
+  function normalizeId(type, id) {
+    return type === 'service' && Number.isInteger(Number(id)) ? Number(id) : id;
+  }
+
   function getCatalogItem(type, id) {
     const catalog = type === 'package' ? window.TRINY_CONFIG?.packages : window.TRINY_CONFIG?.services;
-    return catalog?.find(item => item.id === id);
+    const normalizedId = normalizeId(type, id);
+    return catalog?.find(item => item.id === normalizedId);
   }
 
   function loadItems() {
@@ -55,33 +60,38 @@
     };
   }
 
+  function escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[char]));
+  }
+
   function render() {
     const totals = getTotals();
     const listMarkup = totals.lines.map(line => `
-      <article class="cart-item">
+      <article class="cart-item${line.type === 'service' && line.img ? ' has-image' : ''}">
+        ${line.type === 'service' && line.img
+          ? `<img class="cart-item-image" src="${escapeHTML(line.img)}" alt="${escapeHTML(line.name)}" loading="lazy" />`
+          : ''}
         <div class="cart-item-info">
-          <strong>${line.name}</strong>
+          <strong>${escapeHTML(line.name)}</strong>
           <span>S/ ${line.priceNum} por ${line.type === 'package' ? 'paquete' : 'sesión'} · Subtotal: S/ ${line.lineTotal}</span>
+          ${line.duration ? `<small>Duración: ${escapeHTML(line.duration)}</small>` : ''}
           ${line.type === 'package' ? `<small>${line.sessions} sesiones incluidas en ${line.quantity} paquete(s)</small>` : ''}
         </div>
-        <div class="cart-quantity" role="group" aria-label="Cantidad de ${line.name}">
-          <button type="button" aria-label="Reducir cantidad de ${line.name}" onclick="TrinyCart.update('${line.type}', '${line.id}', ${line.quantity - 1})" ${line.quantity <= 1 ? 'disabled' : ''}>−</button>
+        <div class="cart-quantity" role="group" aria-label="Cantidad de ${escapeHTML(line.name)}">
+          <button type="button" aria-label="Reducir cantidad de ${escapeHTML(line.name)}" onclick="TrinyCart.update('${line.type}', '${line.id}', ${line.quantity - 1})" ${line.quantity <= 1 ? 'disabled' : ''}>−</button>
           <span aria-live="polite">${line.quantity}</span>
-          <button type="button" aria-label="Aumentar cantidad de ${line.name}" onclick="TrinyCart.update('${line.type}', '${line.id}', ${line.quantity + 1})" ${line.quantity >= MAX_QUANTITY ? 'disabled' : ''}>+</button>
+          <button type="button" aria-label="Aumentar cantidad de ${escapeHTML(line.name)}" onclick="TrinyCart.update('${line.type}', '${line.id}', ${line.quantity + 1})" ${line.quantity >= MAX_QUANTITY ? 'disabled' : ''}>+</button>
         </div>
-        <button type="button" class="btn btn-outline" onclick="TrinyCart.remove('${line.type}', '${line.id}')">Quitar</button>
+        <button type="button" class="btn btn-outline" aria-label="Eliminar ${escapeHTML(line.name)} del carrito" onclick="TrinyCart.remove('${line.type}', '${line.id}')">Quitar</button>
       </article>
     `).join('');
 
-    ['cartItems', 'drawerCartItems'].forEach(id => {
-      const root = document.getElementById(id);
-      if (root) root.innerHTML = listMarkup;
-    });
+    const root = document.getElementById('drawerCartItems');
+    if (root) root.innerHTML = listMarkup;
     const values = {
       cartCount: totals.sessions,
-      cartAmount: `S/ ${totals.amount}`,
-      cartSessions: totals.sessions,
-      cartCountSummary: totals.items,
       drawerCartCount: totals.items,
       drawerCartSessions: totals.sessions,
       drawerCartAmount: `S/ ${totals.amount}`
@@ -92,33 +102,31 @@
     });
     const countButton = document.querySelector('.header-cart-button');
     if (countButton) countButton.setAttribute('aria-label', `Abrir carrito, ${totals.sessions} sesiones`);
-    ['cartEmpty', 'drawerCartEmpty'].forEach(id => {
-      const empty = document.getElementById(id);
-      if (empty) empty.hidden = totals.lines.length > 0;
-    });
-    ['cartLines', 'drawerCartLines'].forEach(id => {
-      const lines = document.getElementById(id);
-      if (lines) lines.hidden = totals.lines.length === 0;
-    });
+    const empty = document.getElementById('drawerCartEmpty');
+    if (empty) empty.hidden = totals.lines.length > 0;
+    const lines = document.getElementById('drawerCartLines');
+    if (lines) lines.hidden = totals.lines.length === 0;
   }
 
   window.TrinyCart = {
     add(type, id, quantity) {
-      const product = getCatalogItem(type, id);
+      const normalizedId = normalizeId(type, id);
+      const product = getCatalogItem(type, normalizedId);
       const amount = Number(quantity);
       if (!product || !Number.isInteger(amount) || amount < 1 || amount > MAX_QUANTITY) {
         window.showToast?.('No se pudo agregar', 'Revisa el servicio y la cantidad seleccionada.', 'warning');
         return;
       }
-      const existing = items.find(item => item.type === type && item.id === id);
+      const existing = items.find(item => item.type === type && item.id === normalizedId);
       if (existing) existing.quantity = Math.min(MAX_QUANTITY, existing.quantity + amount);
-      else items.push({ type, id, quantity: amount });
+      else items.push({ type, id: normalizedId, quantity: amount });
       save();
       window.showToast?.('Agregado al carrito', `${product.name} · cantidad ${amount}`, 'success');
     },
     update(type, id, quantity) {
       const amount = Number(quantity);
-      const item = items.find(entry => entry.type === type && entry.id === id);
+      const normalizedId = normalizeId(type, id);
+      const item = items.find(entry => entry.type === type && entry.id === normalizedId);
       if (!item || !Number.isInteger(amount) || amount < 1 || amount > MAX_QUANTITY) {
         render();
         window.showToast?.('Cantidad no válida', `Elige una cantidad entre 1 y ${MAX_QUANTITY}.`, 'warning');
@@ -128,7 +136,8 @@
       save();
     },
     remove(type, id) {
-      items = items.filter(item => !(item.type === type && item.id === id));
+      const normalizedId = normalizeId(type, id);
+      items = items.filter(item => !(item.type === type && item.id === normalizedId));
       save();
     },
     getItems() {

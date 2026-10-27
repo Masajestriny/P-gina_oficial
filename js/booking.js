@@ -1,4 +1,4 @@
-(function() {
+﻿(function() {
   'use strict';
 
   const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -11,7 +11,8 @@
       date: '',
       time: '',
       client: {},
-      serviceId: '',
+      serviceQuantities: {},
+      packageId: '',
       calendarYear: new Date().getFullYear(),
       calendarMonth: new Date().getMonth()
     };
@@ -24,8 +25,17 @@
   }
 
   function currentItems() {
-    const service = window.TRINY_CONFIG?.services?.find(item => String(item.id) === bookingState.serviceId);
-    return service ? [{ ...service, type: 'service', quantity: 1, sessions: 1, lineTotal: service.priceNum }] : [];
+    const config = window.TRINY_CONFIG;
+    if (bookingState.packageId) {
+      const pack = config?.packages?.find(item => item.id === bookingState.packageId);
+      return pack ? [{ ...pack, type: 'package', quantity: 1, sessions: pack.sessions, lineTotal: pack.priceNum }] : [];
+    }
+    return (config?.services || [])
+      .filter(service => bookingState.serviceQuantities[service.id] > 0)
+      .map(service => {
+        const quantity = bookingState.serviceQuantities[service.id];
+        return { ...service, type: 'service', quantity, sessions: quantity, lineTotal: service.priceNum * quantity };
+      });
   }
 
   function renderStep() {
@@ -40,23 +50,125 @@
     if (bookingState.step === 3) initLocationControls();
   }
 
+
+  // ── Categorías del acordeón (Step 1) ──────────────────────────────────────
+  const SERVICE_CATEGORIES = [
+    { key: 'estetico',      label: 'Estético / Reductor',  icon: '✨' },
+    { key: 'maderoterapia', label: 'Maderoterapia',         icon: '🪵' },
+    { key: 'terapeutico',   label: 'Terapéutico',           icon: '💆' },
+    { key: 'relajacion',    label: 'Relajación',            icon: '🌿' },
+    { key: 'oriental',      label: 'Shiatsu',               icon: '🧘' },
+    { key: 'reflexologia',  label: 'Reflexología',          icon: '🦶' }
+  ];
+
   function renderServicesStep() {
-    const lines = currentItems();
-    const selectedService = lines[0];
+    const lines      = currentItems();
+    const total      = lines.reduce((sum, l) => sum + l.lineTotal, 0);
+    const hasPackage = !!bookingState.packageId;
+    const services   = window.TRINY_CONFIG.services || [];
+    const selCount   = lines.filter(l => l.type === 'service').reduce((s, l) => s + l.quantity, 0);
+    const openCat    = bookingState._openCat || null;
+
+    /* Acordeón por categoría */
+    const accordionHTML = SERVICE_CATEGORIES.map(cat => {
+      const catSvcs = services.filter(s => s.category === cat.key);
+      if (!catSvcs.length) return '';
+      const catSel  = catSvcs.reduce((s, sv) => s + (bookingState.serviceQuantities[sv.id] || 0), 0);
+      const isOpen  = openCat === cat.key;
+
+      const rows = catSvcs.map(svc => {
+        const qty = bookingState.serviceQuantities[svc.id] || 0;
+        return `
+          <div class="bk-svc-row${qty > 0 ? ' bk-svc-selected' : ''}" data-bk-svc-id="${svc.id}">
+            ${svc.img ? `<img class="bk-svc-img" src="${escapeHTML(svc.img)}" alt="${escapeHTML(svc.name)}" loading="lazy" />` : ''}
+            <div class="bk-svc-info">
+              <span class="bk-svc-name">${escapeHTML(svc.name)}</span>
+              <span class="bk-svc-meta">${escapeHTML(svc.duration)} · S/ ${svc.priceNum}/sesión</span>
+            </div>
+            <div class="bk-svc-controls${hasPackage ? ' bk-disabled' : ''}">
+              <button type="button" class="bk-qty-btn" data-bk-dec="${svc.id}"
+                      aria-label="Quitar sesión" ${qty < 1 || hasPackage ? 'disabled' : ''}>−</button>
+              <input  type="number" class="bk-qty-input" min="0" max="999" step="1"
+                      inputmode="numeric" value="${qty}"
+                      data-booking-quantity="${svc.id}"
+                      aria-label="Cantidad de ${escapeHTML(svc.name)}"
+                      ${hasPackage ? 'disabled' : ''} />
+              <button type="button" class="bk-qty-btn bk-qty-add" data-bk-inc="${svc.id}"
+                      aria-label="Agregar sesión" ${hasPackage ? 'disabled' : ''}>+</button>
+            </div>
+            <span class="bk-svc-subtotal" data-booking-subtotal="${svc.id}">${qty > 0 ? 'S/ ' + (svc.priceNum * qty) : '—'}</span>
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="bk-cat-block${isOpen ? ' bk-cat-open' : ''}">
+          <button type="button" class="bk-cat-header"
+                  data-bk-cat="${cat.key}" aria-expanded="${isOpen}"
+                  ${hasPackage ? 'disabled' : ''}>
+            <span class="bk-cat-icon" aria-hidden="true">${cat.icon}</span>
+            <span class="bk-cat-label">${cat.label}</span>
+            ${catSel > 0 ? `<span class="bk-cat-badge">${catSel} ses.</span>` : ''}
+            <span class="bk-cat-arrow" aria-hidden="true"></span>
+          </button>
+          <div class="bk-cat-body"${isOpen ? '' : ' hidden'}>
+            ${rows}
+          </div>
+        </div>`;
+    }).join('');
+
+    /* Resumen de selección activa */
+    const selLines = lines.filter(l => l.type === 'service');
+    const summaryHTML = selLines.length ? `
+      <div class="bk-selection-summary" aria-live="polite">
+        <p class="bk-summary-title">Sesiones seleccionadas:</p>
+        <ul class="bk-summary-list">
+          ${selLines.map(l => `<li><span>${escapeHTML(l.name)}</span><span>× ${l.quantity} = <strong>S/ ${l.lineTotal}</strong></span></li>`).join('')}
+        </ul>
+      </div>` : '';
+
     return `
-      <h3 class="booking-step-title">1. Elige un masaje</h3>
-      <label class="form-group" for="bookingService">Tipo de masaje
-        <select id="bookingService">
-          <option value="">Selecciona un servicio</option>
-          ${window.TRINY_CONFIG.services.map(service => `<option value="${service.id}" ${String(service.id) === bookingState.serviceId ? 'selected' : ''}>${escapeHTML(service.name)}</option>`).join('')}
-        </select>
-      </label>
-      <p class="availability-note" id="bookingServiceDetails" aria-live="polite">${selectedService ? `${escapeHTML(selectedService.duration)} · S/ ${selectedService.priceNum} (importe estimado)` : 'La duración y el precio estimado se mostrarán al elegir un servicio.'}</p>
-      <div class="booking-nav">
-        <button type="button" class="btn btn-primary" onclick="bookingNext()" ${lines.length ? '' : 'disabled'} id="bookingServiceNext">Siguiente: horario preferido</button>
+      <h3 class="booking-step-title">1. Elige tus sesiones</h3>
+      <p class="availability-note">Despliega el tipo de masaje, ajusta la cantidad y agrega cuantas sesiones quieras. Puedes combinar varios tipos.</p>
+
+      <div class="bk-accordion" id="bkAccordion" role="list" aria-label="Tipos de masaje">
+        ${accordionHTML}
       </div>
-    `;
+
+      ${summaryHTML}
+
+      <fieldset class="booking-package-list">
+        <legend>📦 Paquetes de 10 sesiones</legend>
+        <p class="bk-pkg-note">Al elegir un paquete se descartan las sesiones individuales.</p>
+        ${(window.TRINY_CONFIG.packages || []).map(pack => `
+          <label class="booking-package-option${bookingState.packageId === pack.id ? ' selected' : ''}">
+            <input type="radio" name="bookingPackage" value="${escapeHTML(pack.id)}"
+                   data-booking-package ${bookingState.packageId === pack.id ? 'checked' : ''} />
+            <span class="booking-package-content">
+              <strong>${escapeHTML(pack.name)}</strong>
+              <span>${pack.sessions} sesiones · <strong>S/ ${pack.priceNum}</strong></span>
+              <span class="bk-pkg-details">${(pack.details || []).map(d => escapeHTML(d)).join(' · ')}</span>
+              ${pack.terms ? `<small>${escapeHTML(pack.terms)}</small>` : ''}
+              ${pack.id === 'reductor-10' ? '<small>⚠️ Distribución de técnicas a confirmar con el equipo.</small>' : ''}
+            </span>
+          </label>`).join('')}
+        ${bookingState.packageId
+          ? `<button type="button" class="btn btn-secondary booking-clear-package"
+                     onclick="clearBookingPackage()">✕ Quitar paquete</button>`
+          : ''}
+      </fieldset>
+
+      <p class="booking-selection-total" aria-live="polite">
+        Total estimado: <strong id="bookingSelectionTotal">S/ ${total}</strong>
+        ${selCount > 0 ? `<small>(${selCount} sesión${selCount !== 1 ? 'es' : ''})</small>` : ''}
+      </p>
+      <div class="booking-nav">
+        <button type="button" class="btn btn-primary" onclick="bookingNext()"
+                ${lines.length ? '' : 'disabled'} id="bookingServiceNext">
+          Siguiente: horario preferido
+        </button>
+      </div>`;
   }
+
 
   function renderDateStep() {
     const year = bookingState.calendarYear;
@@ -271,7 +383,9 @@
   function buildWhatsAppMessage() {
     const client = bookingState.client;
     const lines = currentItems();
-    const itemsText = lines.map(line => `- ${line.name} x ${line.quantity} (${line.sessions} sesiones incluidas; S/ ${line.lineTotal} estimado)`).join('\n');
+    const itemsText = lines.map(line => line.type === 'package'
+      ? `- ${line.name}: 1 paquete (${line.sessions} sesiones incluidas; S/ ${line.lineTotal} estimado)`
+      : `- ${line.name}: ${line.quantity} ${line.quantity === 1 ? 'sesión' : 'sesiones'} (S/ ${line.priceNum} c/u; S/ ${line.lineTotal} estimado)`).join('\n');
     return [
       'Solicitud de reserva — Masajes Triny Delivery',
       `Cliente: ${client.firstName} ${client.lastName}`,
@@ -282,22 +396,42 @@
       `Fecha/hora preferida: ${bookingState.date} ${bookingState.time}`,
       'Servicios:',
       itemsText,
-      `Duración: ${lines[0]?.duration || 'Por confirmar'}`,
+      `Duración total estimada: ${getBookingDuration(lines)}`,
       `Total estimado, sujeto a confirmación: S/ ${lines.reduce((sum, line) => sum + line.lineTotal, 0)}`,
       `Observaciones: ${client.notes || 'Ninguna'}`,
       'Este mensaje es un borrador. No se ha enviado ni confirmado la reserva.'
     ].join('\n');
   }
 
-  window.selectBookingService = function(serviceId) {
-    bookingState.serviceId = String(serviceId || '');
-    const selected = currentItems()[0];
-    const details = document.getElementById('bookingServiceDetails');
+  function getBookingDuration(lines) {
+    let totalMinutes = 0;
+    for (const line of lines) {
+      const match = String(line.duration || '').match(/(\d+)\s*(min(?:utos?)?|h(?:ora)?s?)/i);
+      if (!match) return 'Por confirmar según los servicios o paquetes seleccionados';
+      totalMinutes += Number(match[1]) * (/^h/i.test(match[2]) ? 60 : 1) * line.sessions;
+    }
+    if (!totalMinutes) return 'Por confirmar';
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return [hours ? `${hours} h` : '', minutes ? `${minutes} min` : ''].filter(Boolean).join(' ');
+  }
+
+  function updateSelectionSummary() {
+    const lines = currentItems();
+    const total = lines.reduce((sum, line) => sum + line.lineTotal, 0);
+    lines.filter(line => line.type === 'service').forEach(line => {
+      const subtotal = document.querySelector(`[data-booking-subtotal="${line.id}"]`);
+      if (subtotal) subtotal.textContent = `S/ ${line.lineTotal}`;
+    });
+    const totalElement = document.getElementById('bookingSelectionTotal');
+    if (totalElement) totalElement.textContent = `S/ ${total}`;
     const next = document.getElementById('bookingServiceNext');
-    if (details) details.textContent = selected
-      ? `${selected.duration} · S/ ${selected.priceNum} (importe estimado)`
-      : 'La duración y el precio estimado se mostrarán al elegir un servicio.';
-    if (next) next.disabled = !selected;
+    if (next) next.disabled = !lines.length;
+  }
+
+  window.clearBookingPackage = function() {
+    bookingState.packageId = '';
+    renderStep();
   };
 
   window.sendBookingRequestToWhatsApp = function() {
@@ -334,7 +468,24 @@
 
   window.startBookingForService = function(serviceId) {
     bookingState = createInitialState();
-    bookingState.serviceId = String(serviceId);
+    const service = window.TRINY_CONFIG?.services?.find(item => String(item.id) === String(serviceId));
+    if (service) bookingState.serviceQuantities[service.id] = 1;
+    renderStep();
+    window.TrinyDrawers?.open('bookingDrawer');
+  };
+
+
+  window.startBookingWithState = function(preState) {
+    bookingState = createInitialState();
+    if (preState && preState.packageId) {
+      bookingState.packageId = preState.packageId;
+    } else if (preState && preState.serviceQuantities) {
+      Object.entries(preState.serviceQuantities).forEach(function(entry) {
+        var numId = Number(entry[0]);
+        var qty = entry[1];
+        if (Number.isInteger(qty) && qty > 0) bookingState.serviceQuantities[numId] = qty;
+      });
+    }
     renderStep();
     window.TrinyDrawers?.open('bookingDrawer');
   };
@@ -406,7 +557,34 @@
 
   document.addEventListener('change', event => {
     if (event.target?.id === 'bkTime') updateDateButton();
-    if (event.target?.id === 'bookingService') window.selectBookingService(event.target.value);
+    const serviceCheckbox = event.target?.closest?.('[data-booking-service]');
+    if (serviceCheckbox) {
+      const serviceId = Number(serviceCheckbox.dataset.bookingService);
+      if (serviceCheckbox.checked) {
+        bookingState.packageId = '';
+        bookingState.serviceQuantities[serviceId] = bookingState.serviceQuantities[serviceId] || 1;
+      } else {
+        delete bookingState.serviceQuantities[serviceId];
+      }
+      renderStep();
+    }
+    const quantityInput = event.target?.closest?.('[data-booking-quantity]');
+    if (quantityInput) {
+      const serviceId = Number(quantityInput.dataset.bookingQuantity);
+      const amount = quantityInput.valueAsNumber;
+      if (!Number.isInteger(amount) || amount < 1 || amount > 99) {
+        quantityInput.value = String(bookingState.serviceQuantities[serviceId] || 1);
+        window.showToast?.('Cantidad no válida', 'Elige una cantidad entre 1 y 99 sesiones.', 'warning');
+        return;
+      }
+      bookingState.serviceQuantities[serviceId] = amount;
+      updateSelectionSummary();
+    }
+    if (event.target?.matches?.('[data-booking-package]') && event.target.checked) {
+      bookingState.serviceQuantities = {};
+      bookingState.packageId = event.target.value;
+      renderStep();
+    }
     if (event.target?.id === 'bkSpaceConsent' || event.target?.id === 'bkContactConsent') {
       const checked = event.target.checked;
       const key = event.target.id === 'bkSpaceConsent' ? 'spaceConsent' : 'contactConsent';
@@ -416,5 +594,67 @@
     }
   });
 
+  document.addEventListener('input', event => {
+    const quantityInput = event.target?.closest?.('[data-booking-quantity]');
+    if (!quantityInput) return;
+    const serviceId = Number(quantityInput.dataset.bookingQuantity);
+    const amount = quantityInput.valueAsNumber;
+    if (!Number.isInteger(amount) || amount < 1 || amount > 99) return;
+    bookingState.serviceQuantities[serviceId] = amount;
+    updateSelectionSummary();
+  });
+
+  /* ── Acordeón: expandir / contraer categoría ── */
+  document.addEventListener('click', event => {
+    const catBtn = event.target.closest('.bk-cat-header[data-bk-cat]');
+    if (catBtn && !catBtn.disabled) {
+      const cat = catBtn.dataset.bkCat;
+      bookingState._openCat = (bookingState._openCat === cat) ? null : cat;
+      renderStep();
+      return;
+    }
+
+    /* Botón + (incrementar) */
+    const incBtn = event.target.closest('[data-bk-inc]');
+    if (incBtn && !incBtn.disabled) {
+      const id = Number(incBtn.dataset.bkInc);
+      bookingState.packageId = '';
+      bookingState.serviceQuantities[id] = (bookingState.serviceQuantities[id] || 0) + 1;
+      updateSelectionSummary();
+      const row   = document.querySelector('[data-bk-svc-id="' + id + '"]');
+      if (row) row.classList.add('bk-svc-selected');
+      const input = document.querySelector('[data-booking-quantity="' + id + '"]');
+      if (input) input.value = bookingState.serviceQuantities[id];
+      const sub   = document.querySelector('[data-booking-subtotal="' + id + '"]');
+      const svc   = (window.TRINY_CONFIG.services || []).find(s => s.id === id);
+      if (sub && svc) sub.textContent = 'S/ ' + (svc.priceNum * bookingState.serviceQuantities[id]);
+      const decBtn = document.querySelector('[data-bk-dec="' + id + '"]');
+      if (decBtn) decBtn.disabled = false;
+      return;
+    }
+
+    /* Botón − (decrementar) */
+    const decBtn = event.target.closest('[data-bk-dec]');
+    if (decBtn && !decBtn.disabled) {
+      const id  = Number(decBtn.dataset.bkDec);
+      const cur = bookingState.serviceQuantities[id] || 0;
+      if (cur <= 1) {
+        delete bookingState.serviceQuantities[id];
+      } else {
+        bookingState.serviceQuantities[id] = cur - 1;
+      }
+      updateSelectionSummary();
+      const newQty = bookingState.serviceQuantities[id] || 0;
+      const input  = document.querySelector('[data-booking-quantity="' + id + '"]');
+      if (input) input.value = newQty;
+      const row    = document.querySelector('[data-bk-svc-id="' + id + '"]');
+      if (row) row.classList.toggle('bk-svc-selected', newQty > 0);
+      const sub    = document.querySelector('[data-booking-subtotal="' + id + '"]');
+      const svc    = (window.TRINY_CONFIG.services || []).find(s => s.id === id);
+      if (sub && svc) sub.textContent = newQty > 0 ? 'S/ ' + (svc.priceNum * newQty) : '—';
+      decBtn.disabled = newQty < 1;
+      return;
+    }
+  });
   document.addEventListener('DOMContentLoaded', renderStep);
 })();

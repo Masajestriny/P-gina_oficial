@@ -14,17 +14,35 @@ window.SERVICES_DATA = window.TRINY_CONFIG.services.map(service => ({
 window.PACKAGES_DATA = window.TRINY_CONFIG.packages;
 
 window.TEAM_DATA = [
-  { name: 'Criss', image: 'img/Criss.jpg' },
+  { name: 'Betsy', image: 'img/Betsy.jpeg' },
   { name: 'Janet', image: 'img/Janet.jpg' },
-  { name: 'Lidsay', image: 'img/Lidsay.jpg' },
+  { name: 'Maria', image: 'img/Maria.jpeg' },
+  { name: 'Ana', image: 'img/Ana.jpeg' },
+  { name: 'Wendy', image: 'img/Wendy.jpg' },
+  { name: 'Marleny', image: 'img/Marleny.jpg' },
+  { name: 'talia', image: 'img/talia.jpeg' },
+  { name: 'Yanina', image: 'img/Yanina.jpg' },
+  { name: 'Fany', image: 'img/Fany.jpeg' },
+  { name: 'Cielo', image: 'img/Cielo.jpeg' },
+  { name: 'Evelyn', image: 'img/Evelyn.png' },
+  { name: 'Melin', image: 'img/Melin.jpg' },
   { name: 'Mariangel', image: 'img/Mariangel.jpg' },
   { name: 'Naomi', image: 'img/Naomi.jpg' },
-  { name: 'Rosario', image: 'img/Rosario.jpg' },
-  { name: 'Ruth', image: 'img/Ruth.jpg' },
-  { name: 'Vanessa carolina', image: 'img/Vanessa carolina.jpg' },
-  { name: 'Wendy', image: 'img/Wendy.jpg' },
-  { name: 'Yanina', image: 'img/Yanina.jpg' }
+  { name: 'Charo', image: 'img/Charo.png' },
+  { name: 'Vanessa', image: 'img/Vanessa.jpg' },
+  { name: 'Abigail', image: 'img/Abigail.jpeg' },
+  { name: 'Andrea', image: 'img/Andrea.jpeg' },
+  { name: 'Jasmin', image: 'img/Jasmin.jpeg' },
+  { name: 'Carmen', image: 'img/Carmen.jpeg' },
+  { name: 'Criss', image: 'img/Criss.jpg' },
+  { name: 'Elsa', image: 'img/Elsa.jpeg' },
+  { name: 'Danna', image: 'img/Danna.jpeg' },
+  { name: 'Noemi', image: 'img/Noemi.png' }
+
+  
+
 ];
+
 
 // ── Products Data ──
 window.PRODUCTS_DATA = [
@@ -67,7 +85,7 @@ window.GALLERY_DATA = [
   ...[
     'img/LIMA 2.jpg',
     'img/LIMA 3.png',
-    'img/LIMA 4.jpg',
+    'img/LIMA 4.3.png',
     'img/LIMA 5.jpg',
     'img/LIMA 6.jpg',
     'img/LIMA 9.png',
@@ -75,15 +93,15 @@ window.GALLERY_DATA = [
     'img/LIMA 12.jpg',
     'img/LIMA 13.jpg',
     'img/LIMA 14.jpg',
-    'img/LIMA 15.jpg',
-    'img/LIMA 16.jpg',
-    'img/LIMA 17.jpg',
-    'img/LIMA 18.jpg',
-    'img/LIMA 19.jpg',
+    'img/LIMA 15.jpeg',
+    'img/LIMA 16.jpeg',
+    'img/LIMA 17.jpeg',
+    'img/LIMA 18.jpeg',
+    'img/LIMA 19.jpeg',
     'img/LIMA 20.jpg',
     'img/LIMA 21.jpg',
     'img/LIMA 23.jpg',
-    'img/LIMA 24.jpg',
+    'img/LIMA 24.png',
     'img/LIMA 25.jpg',
     'img/LIMA 26.jpg',
     'img/LIMA 27.jpg',

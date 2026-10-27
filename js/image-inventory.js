@@ -629,8 +629,8 @@ window.IMAGE_INVENTORY = [
     ]
   },
   {
-    "path": "img/Lidsay.jpg",
-    "name": "Lidsay.jpg",
+    "path": "img/Melin.jpg",
+    "name": "Melin.jpg",
     "category": "equipo",
     "categoryLabel": "Equipo",
     "locations": [
@@ -753,8 +753,8 @@ window.IMAGE_INVENTORY = [
     ]
   },
   {
-    "path": "img/Rosario.jpg",
-    "name": "Rosario.jpg",
+    "path": "img/Charo.png",
+    "name": "Charo.png",
     "category": "equipo",
     "categoryLabel": "Equipo",
     "locations": [
@@ -764,8 +764,8 @@ window.IMAGE_INVENTORY = [
     ]
   },
   {
-    "path": "img/Ruth.jpg",
-    "name": "Ruth.jpg",
+    "path": "img/Marleny.jpg",
+    "name": "Marleny.jpg",
     "category": "equipo",
     "categoryLabel": "Equipo",
     "locations": [
@@ -796,8 +796,8 @@ window.IMAGE_INVENTORY = [
     ]
   },
   {
-    "path": "img/Vanessa carolina.jpg",
-    "name": "Vanessa carolina.jpg",
+    "path": "img/Vanessa.jpg",
+    "name": "Vanessa.jpg",
     "category": "equipo",
     "categoryLabel": "Equipo",
     "locations": [
@@ -827,5 +827,159 @@ window.IMAGE_INVENTORY = [
       "#galeria ? Inventario de revisi?n",
       "Datos ? Equipo"
     ]
-  }
+  },
+  {
+    "path": "img/Abigail.jpeg",
+    "name": "Abigail.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Andrea.jpeg",
+    "name": "Andrea.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Maria.jpeg",
+    "name": "Maria.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Cielo.jpeg",
+    "name": "Cielo.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Fany.jpeg",
+    "name": "Fany.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Jasmin.jpeg",
+    "name": "Jasmin.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Carmen.jpeg",
+    "name": "Carmen.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Evelyn.png",
+    "name": "Evelyn.png",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Betsy.jpeg",
+    "name": "Betsy.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Elsa.jpeg",
+    "name": "Elsa.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Danna.jpeg",
+    "name": "Danna.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Ana.jpeg",
+    "name": "Ana.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Talia.jpeg",
+    "name": "Talia.jpeg",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
+  {
+    "path": "img/Noemi.png",
+    "name": "Noemi.png",
+    "category": "equipo",
+    "categoryLabel": "Equipo",
+    "locations": [
+      "#equipo ? Tarjeta con nombre de archivo",
+      "#galeria ? Inventario de revisi?n",
+      "Datos ? Equipo"
+    ]
+  },
 ];

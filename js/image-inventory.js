@@ -884,8 +884,8 @@ window.IMAGE_INVENTORY = [
     ]
   },
   {
-    "path": "img/Jasmin.jpeg",
-    "name": "Jasmin.jpeg",
+    "path": "img/Jasmin.jpg",
+    "name": "Jasmin.jpg",
     "category": "equipo",
     "categoryLabel": "Equipo",
     "locations": [

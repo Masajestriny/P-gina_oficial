@@ -32,7 +32,7 @@ window.TEAM_DATA = [
   { name: 'Vanessa', image: 'img/Vanessa.jpg' },
   { name: 'Abigail', image: 'img/Abigail.jpeg' },
   { name: 'Andrea', image: 'img/Andrea.jpeg' },
-  { name: 'Jasmin', image: 'img/Jasmin.jpeg' },
+  { name: 'Jasmin', image: 'img/Jasmin.jpg' },
   { name: 'Carmen', image: 'img/Carmen.jpeg' },
   { name: 'Criss', image: 'img/Criss.jpg' },
   { name: 'Elsa', image: 'img/Elsa.jpeg' },

@@ -90,8 +90,11 @@
       if (!moved && Math.hypot(deltaX, deltaY) < 5) return;
       moved = true;
       const rect = button.getBoundingClientRect();
-      const left = Math.max(0, Math.min(window.innerWidth - rect.width, startLeft + deltaX));
-      const top = Math.max(0, Math.min(window.innerHeight - rect.height, startTop + deltaY));
+      const margin = 8;
+      const maxLeft = Math.max(margin, window.innerWidth - rect.width - margin);
+      const maxTop = Math.max(margin, window.innerHeight - rect.height - margin);
+      const left = Math.max(margin, Math.min(maxLeft, startLeft + deltaX));
+      const top = Math.max(margin, Math.min(maxTop, startTop + deltaY));
       button.style.left = `${left}px`;
       button.style.top = `${top}px`;
       button.style.right = 'auto';

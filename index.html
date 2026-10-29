@@ -99,8 +99,11 @@
   <!-- ===================== NAVBAR ===================== -->
   <header class="navbar" id="navbar">
     <nav class="nav-container" role="navigation" aria-label="Menú principal">
-      <a href="#inicio" class="nav-logo-link" aria-label="Triny Masajes - Inicio">
-        <img src="img/Triny_Masajes_logo.png" alt="Triny Masajes Logo" class="nav-logo" loading="eager" />
+      <a href="/" onclick="event.preventDefault(); window.location.href='/';" class="nav-logo-link relative flex flex-col leading-none no-underline" aria-label="Triny Masajes - Recargar inicio" title="Triny Masajes - Inicio">
+        <div class="header-logo-text relative flex flex-col leading-none">
+          <span class="header-logo-brand font-extrabold tracking-tight">Triny</span>
+          <span class="header-logo-sub tracking-[1px] font-semibold">Masajes</span>
+        </div>
       </a>
 
       <ul class="nav-menu" id="navMenu">
@@ -152,12 +155,8 @@
     <div class="hero-content">
       <div class="hero-layout">
         <div class="hero-copy">
-          <div class="hero-badge">
-            <span class="badge-dot"></span>
-            Masajes a domicilio — Masajes Triny Delivery
-          </div>
           <h1 class="hero-title">
-            Bienestar profesional<br/>
+             <br/>Bienestar profesional<br/>
             <span class="hero-title-accent">en la comodidad de tu hogar</span>
           </h1>
           <p class="hero-subtitle">
@@ -898,14 +897,6 @@
             <label>Firma del consumidor (escribe tu nombre)<input name="consumerSignature" maxlength="120" required /></label>
             <label>Fecha<input name="claimDate" type="date" required /></label>
           </fieldset>
-          <fieldset class="provider-response">
-            <legend>Sección reservada al proveedor</legend>
-            <p>No completar. Uso exclusivo del proveedor para respuesta, observaciones y firma.</p>
-            <label>Respuesta<textarea name="providerResponse" rows="2" maxlength="1000" disabled></textarea></label>
-            <label>Observaciones<textarea name="providerObservations" rows="2" maxlength="1000" disabled></textarea></label>
-            <label>Fecha de comunicación de la respuesta<input name="providerResponseDate" type="date" disabled /></label>
-            <label>Firma del proveedor<input name="providerSignature" disabled /></label>
-          </fieldset>
           <p class="legal-notice">El proveedor debe dar respuesta al reclamo o queja en un plazo no mayor a quince (15) días hábiles, el cual es improrrogable. La formulación del reclamo no impide acudir a otras vías de solución de controversias ni es requisito previo para interponer una denuncia ante el INDECOPI. Validar los datos legales y el cumplimiento del formato con el titular antes de usar este canal como libro oficial.</p>
           <label>Central de atención<select name="central"><option value="central1">Central 1</option><option value="central2">Central 2</option></select></label>
           <button type="submit" class="btn btn-primary">Preparar borrador en WhatsApp</button>
@@ -916,7 +907,7 @@
 
   <section id="privacidad" class="section legal-section" aria-label="Aviso de privacidad">
     <div class="container">
-      <h2>Aviso de privacidad — borrador pendiente de validación</h2>
+      <h2>Aviso de privacidad</h2>
       <p>Los datos ingresados se utilizarán para gestionar y coordinar solicitudes de atención. Antes de publicar este aviso, el titular debe confirmar identidad, finalidades, conservación, derechos, canal de atención y medidas de tratamiento aplicables.</p>
       <h3 id="condiciones">Términos y condiciones</h3>
       <p>Los precios y horarios mostrados son referenciales hasta su confirmación por la central. Enviar una solicitud no constituye una reserva confirmada ni un pago.</p>
